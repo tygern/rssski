@@ -6,8 +6,8 @@ dependencies {
     implementation("io.ktor:ktor-server-jetty:$ktorVersion")
     implementation("io.ktor:ktor-locations:$ktorVersion")
     implementation("io.ktor:ktor-serialization:$ktorVersion")
+    implementation("io.ktor:ktor-client-core:${ktorVersion}")
     implementation("ch.qos.logback:logback-classic:1.2.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.0")
 
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
 }
