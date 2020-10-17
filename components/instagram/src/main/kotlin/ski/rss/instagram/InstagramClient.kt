@@ -12,10 +12,10 @@ import kotlinx.serialization.json.jsonPrimitive
 import java.net.URI
 
 class InstagramClient(
-    val instagramUrl: URI,
-    val httpClient: HttpClient
+    private val instagramUrl: URI,
+    private val httpClient: HttpClient
 ) {
-    suspend fun findFeed(name: String): Result<InstagramFeed> {
+    suspend fun findFeed(name: String): Result<InstagramProfile> {
         val feedData = httpClient.get<String>("$instagramUrl/$name?__a=1")
         val json = Json.decodeFromString<JsonObject>(feedData)
             .getObject("graphql").getObject("user")
@@ -23,14 +23,14 @@ class InstagramClient(
         return Result.Success(instagramFeed(name, json))
     }
 
-    private fun instagramFeed(name: String, json: JsonObject): InstagramFeed {
+    private fun instagramFeed(name: String, json: JsonObject): InstagramProfile {
         val posts = json.getObject("edge_owner_to_timeline_media")
             .getArray("edges")
             .take(10)
             .map(JsonElement::jsonObject)
             .map { it.getObject("node") }
 
-        return InstagramFeed(
+        return InstagramProfile(
             name = name,
             description = json.getString("biography"),
             link = URI("$instagramUrl/$name"),
@@ -47,7 +47,8 @@ class InstagramClient(
         return InstagramPost(
             title = json.getObject("location").getString("name"),
             description = """
-                                |<img src="${json.getString("display_url")}">
+                                |<img src="${json.getString("display_url")}"/>
+                                |
                                 |$description
                             """.trimMargin(),
             link = URI("$instagramUrl/p/${json.getString("shortcode")}"),
@@ -59,7 +60,7 @@ fun JsonObject.getObject(name: String) = this[name]!!.jsonObject
 fun JsonObject.getArray(name: String) = this[name]!!.jsonArray
 fun JsonObject.getString(name: String) = this[name]!!.jsonPrimitive.content
 
-data class InstagramFeed(
+data class InstagramProfile(
     val name: String,
     val description: String,
     val link: URI,

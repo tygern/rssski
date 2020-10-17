@@ -4,7 +4,7 @@ import org.junit.Test
 import ski.rss.rss.Item
 import ski.rss.rss.Rss
 import ski.rss.rss.serialize
-import java.net.URL
+import java.net.URI
 import kotlin.test.assertEquals
 
 class RssSerializationTest {
@@ -12,19 +12,19 @@ class RssSerializationTest {
     fun testSerialize() {
         val rss = Rss(
             title = "Cooking for birds",
-            url = URL("https://cfb.example.com"),
+            url = URI("https://cfb.example.com"),
             description = "It's for the birds",
-            imageUrl = URL("https://cfb.example.com/bird.jpg"),
+            imageUrl = URI("https://cfb.example.com/bird.jpg"),
             items = listOf(
                 Item(
                     title = "Seeds 101",
-                    url = URL("https://cfb.example.com/seeds.html"),
+                    url = URI("https://cfb.example.com/seeds.html"),
                     description = "Seed basics",
                     author = "Christopher Wren",
                 ),
                 Item(
                     title = "Millet 304",
-                    url = URL("https://cfb.example.com/millet.html"),
+                    url = URI("https://cfb.example.com/millet.html"),
                     description = "Get your beak around millet",
                     author = "Florence Nightingale",
                 ),

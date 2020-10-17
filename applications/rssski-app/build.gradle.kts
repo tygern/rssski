@@ -3,10 +3,15 @@ import org.gradle.api.file.DuplicatesStrategy.INCLUDE
 val ktorVersion: String by extra
 
 dependencies {
+    implementation(project(":components:instagram"))
+    implementation(project(":components:instagram-feed"))
+    implementation(project(":components:rss"))
+
     implementation("io.ktor:ktor-server-jetty:$ktorVersion")
     implementation("io.ktor:ktor-locations:$ktorVersion")
     implementation("io.ktor:ktor-serialization:$ktorVersion")
-    implementation("io.ktor:ktor-client-core:${ktorVersion}")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+
     implementation("ch.qos.logback:logback-classic:1.2.3")
 
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")

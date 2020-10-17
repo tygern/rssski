@@ -12,7 +12,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 import ski.rss.instagram.InstagramClient
-import ski.rss.instagram.InstagramFeed
+import ski.rss.instagram.InstagramProfile
 import ski.rss.instagram.InstagramPost
 import ski.rss.instagram.Result
 import java.net.URI
@@ -42,7 +42,7 @@ class InstagramClientTest {
             httpClient = httpClient,
         ).findFeed("finnsadventures")
 
-        val expectedResult = InstagramFeed(
+        val expectedResult = InstagramProfile(
             name = "finnsadventures",
             description = "Here is my biography",
             link = URI("http://instagram.example.com/finnsadventures"),
@@ -51,7 +51,8 @@ class InstagramClientTest {
                 InstagramPost(
                     title = "Asbury Park Convention Hall",
                     description = """
-                        <img src="https://instagram.example.com/display.jpg">
+                        <img src="https://instagram.example.com/display.jpg"/>
+
                         Asbury Park Convention Hall description
                     """.trimIndent(),
                     link = URI("http://instagram.example.com/p/Bx7b96cHeVs"),

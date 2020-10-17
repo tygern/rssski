@@ -1,19 +1,19 @@
 package ski.rss.rss
 
-import java.net.URL
+import java.net.URI
 
-class Rss(
+data class Rss(
     val title: String,
     val description: String,
-    val url: URL,
-    val imageUrl: URL,
+    val url: URI,
+    val imageUrl: URI,
     val items: List<Item>,
 )
 
 data class Item(
     val title: String,
     val description: String,
-    val url: URL,
+    val url: URI,
     val author: String,
 )
 
