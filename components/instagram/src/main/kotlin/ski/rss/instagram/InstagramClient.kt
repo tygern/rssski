@@ -2,6 +2,7 @@ package ski.rss.instagram
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -9,16 +10,35 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.net.URI
 
 class InstagramClient(
     private val instagramUrl: URI,
     private val httpClient: HttpClient
 ) {
-    suspend fun findFeed(name: String): Result<InstagramProfile> {
-        val feedData = httpClient.get<String>("$instagramUrl/$name?__a=1")
-        val json = Json.decodeFromString<JsonObject>(feedData)
-            .getObject("graphql").getObject("user")
+    companion object {
+        private val logger: Logger = LoggerFactory.getLogger(InstagramClient::class.java)
+    }
+
+    suspend fun fetchProfile(name: String): Result<InstagramProfile> {
+        val profileUrl = "$instagramUrl/$name?__a=1"
+        val feedData = httpClient.get<String>(profileUrl)
+
+        val json = try {
+            Json.decodeFromString<JsonObject>(feedData)
+                .getObject("graphql").getObject("user")
+        } catch (e: SerializationException) {
+            logger.error("JSON parse error {}", e.message)
+            logger.error("""
+                Failed to parse response from {}:
+                
+                {}
+            """.trimIndent(), profileUrl, feedData)
+
+            return Result.Failure("Failed to parse JSON from Instagram response.")
+        }
 
         return Result.Success(instagramFeed(name, json))
     }

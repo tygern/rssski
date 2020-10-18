@@ -20,27 +20,14 @@ import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class InstagramClientTest {
+    private val client = InstagramClient(
+        instagramUrl = URI("http://instagram.example.com"),
+        httpClient = fakeHttpClient,
+    )
 
     @Test
-    fun testProfileInfo() = runBlockingTest {
-        val httpClient = HttpClient(MockEngine) {
-            engine {
-                addHandler { request ->
-                    when (request.method to request.url.location()) {
-                        Get to "http://instagram.example.com/finnsadventures?__a=1" -> {
-                            val responseHeaders = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
-                            respond(javaClass.getResource("/finnsadventures.json").readText(), headers = responseHeaders)
-                        }
-                        else -> error("Unhandled ${request.method} to ${request.url.location()}")
-                    }
-                }
-            }
-        }
-
-        val result = InstagramClient(
-            instagramUrl = URI("http://instagram.example.com"),
-            httpClient = httpClient,
-        ).findFeed("finnsadventures")
+    fun testFetchProfile() = runBlockingTest {
+        val result = client.fetchProfile("finnsadventures")
 
         val expectedResult = InstagramProfile(
             name = "finnsadventures",
@@ -63,6 +50,32 @@ class InstagramClientTest {
         require(result is Result.Success)
         assertEquals(expectedResult, result.value)
     }
+
+    @Test
+    fun testJsonParseError() = runBlockingTest {
+        val result = client.fetchProfile("givemejunk")
+
+        require(result is Result.Failure)
+        assertEquals("Failed to parse JSON from Instagram response.", result.reason)
+    }
 }
 
 private fun Url.location() = "${protocol.name}://$host$fullPath"
+
+private val fakeHttpClient = HttpClient(MockEngine) {
+    engine {
+        addHandler { request ->
+            when (request.method to request.url.location()) {
+                Get to "http://instagram.example.com/finnsadventures?__a=1" -> {
+                    val responseHeaders = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
+                    respond(javaClass.getResource("/finnsadventures.json").readText(), headers = responseHeaders)
+                }
+                Get to "http://instagram.example.com/givemejunk?__a=1" -> {
+                    val responseHeaders = headersOf("Content-Type" to listOf(ContentType.Application.Xml.toString()))
+                    respond("<junk>", headers = responseHeaders)
+                }
+                else -> error("Unhandled ${request.method} to ${request.url.location()}")
+            }
+        }
+    }
+}

@@ -2,6 +2,7 @@ package test.rss
 
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.withCharset
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.contentType
@@ -26,11 +27,10 @@ class InstagramFeedTest {
     @Test
     fun testFeed() = testApp {
         handleRequest(HttpMethod.Get, "/instagram/finnsadventures").apply {
-            assertEquals(200, response.status()?.value)
+            assertEquals(HttpStatusCode.OK, response.status())
             assertEquals(ContentType.Application.Rss.withCharset(Charset.defaultCharset()), response.contentType())
 
-            assertEquals("""
-                |<rss version="2.0">
+            assertEquals("""<rss version="2.0">
                     |<channel>
                         |<title>finnsadventures</title>
                         |<link>http://localhost:8675/finnsadventures</link>
@@ -52,6 +52,16 @@ class InstagramFeedTest {
                     |</channel>
                 |</rss>
             """.trimMargin(), response.content!!)
+        }
+    }
+
+    @Test
+    fun testFeedError() = testApp {
+        handleRequest(HttpMethod.Get, "/instagram/givemejunk").apply {
+            assertEquals(HttpStatusCode.BadRequest, response.status())
+            assertEquals(ContentType.Text.Plain.withCharset(Charset.defaultCharset()), response.contentType())
+
+            assertEquals("Failed to parse JSON from Instagram response.".trimMargin(), response.content!!)
         }
     }
 }
