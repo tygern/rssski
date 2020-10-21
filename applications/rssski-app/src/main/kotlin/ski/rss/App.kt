@@ -17,6 +17,7 @@ import io.ktor.server.jetty.Jetty
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.json.Json
 import ski.rss.instagram.InstagramClient
+import ski.rss.instagram.InstagramJsonParser
 import ski.rss.instagramfeed.instagramFeed
 import java.net.URI
 
@@ -33,9 +34,11 @@ fun Application.module(instagramUrl: URI) {
     }
 
     val httpClient = HttpClient(CIO)
+    val instagramJsonParser = InstagramJsonParser(instagramUrl)
     val instagramClient = InstagramClient(
         instagramUrl = instagramUrl,
-        httpClient = httpClient
+        jsonParser = instagramJsonParser,
+        httpClient = httpClient,
     )
 
     install(Routing) {

@@ -12,6 +12,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 import ski.rss.instagram.InstagramClient
+import ski.rss.instagram.InstagramJsonParser
 import ski.rss.instagram.InstagramProfile
 import ski.rss.instagram.InstagramPost
 import ski.rss.instagram.Result
@@ -22,6 +23,7 @@ import kotlin.test.assertEquals
 class InstagramClientTest {
     private val client = InstagramClient(
         instagramUrl = URI("http://instagram.example.com"),
+        jsonParser = InstagramJsonParser(URI("http://instagram.example.com")),
         httpClient = fakeHttpClient,
     )
 
