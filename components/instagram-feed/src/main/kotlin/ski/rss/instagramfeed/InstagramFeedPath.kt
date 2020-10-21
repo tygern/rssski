@@ -29,7 +29,7 @@ fun Route.instagramFeed(instagramClient: InstagramClient) {
             is Result.Failure -> {
                 call.respondText(
                     text = result.reason,
-                    status = HttpStatusCode.BadRequest
+                    status = HttpStatusCode.ServiceUnavailable
                 )
             }
         }

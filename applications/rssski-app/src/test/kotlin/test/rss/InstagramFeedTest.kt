@@ -58,7 +58,7 @@ class InstagramFeedTest {
     @Test
     fun testFeedError() = testApp {
         handleRequest(HttpMethod.Get, "/instagram/givemejunk").apply {
-            assertEquals(HttpStatusCode.BadRequest, response.status())
+            assertEquals(HttpStatusCode.ServiceUnavailable, response.status())
             assertEquals(ContentType.Text.Plain.withCharset(Charset.defaultCharset()), response.contentType())
 
             assertEquals("Failed to parse JSON from Instagram response.".trimMargin(), response.content!!)
