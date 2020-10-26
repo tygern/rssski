@@ -21,20 +21,24 @@ class InstagramJsonParser(
 
     fun readProfile(json: String): Result<InstagramProfile> {
         val jsonObject = try {
-            Json.decodeFromString<JsonObject>(json)
-                .getObject("graphql").getObject("user")
+            Json.decodeFromString<JsonObject>(json)["graphql"]?.jsonObject
+                ?.get("user")?.jsonObject
         } catch (e: SerializationException) {
             logger.error("JSON parse error {}", e.message)
+            null
+        }
+
+        return if (jsonObject == null) {
             logger.error("""
                 Failed to parse json response:
                 
                 {}
             """.trimIndent(), json)
 
-            return Result.Failure("Failed to parse JSON from Instagram response.")
+            Result.Failure("Failed to parse JSON from Instagram response.")
+        } else {
+            Result.Success(instagramFeed(jsonObject))
         }
-
-        return Result.Success(instagramFeed(jsonObject))
     }
 
     private fun instagramFeed(json: JsonObject): InstagramProfile {

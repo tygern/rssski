@@ -45,4 +45,12 @@ class InstagramJsonParserTest {
         require(result is Result.Failure)
         assertEquals("Failed to parse JSON from Instagram response.", result.reason)
     }
+
+    @Test
+    fun jsonWithMissingProperties() {
+        val result = deserializer.readProfile("{}")
+
+        require(result is Result.Failure)
+        assertEquals("Failed to parse JSON from Instagram response.", result.reason)
+    }
 }
