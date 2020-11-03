@@ -42,12 +42,11 @@ class InstagramJsonParser(
     }
 
     private fun instagramFeed(json: JsonObject): InstagramProfile {
+        val username = json.getString("username")
         val posts = json.getObject("edge_owner_to_timeline_media")
             .getArray("edges")
-            .take(10)
             .map(JsonElement::jsonObject)
             .map { it.getObject("node") }
-        val username = json.getString("username")
 
         return InstagramProfile(
             name = username,
@@ -63,8 +62,14 @@ class InstagramJsonParser(
             .getArray("edges").first().jsonObject
             .getObject("node").getString("text")
 
+        val title = if (json["location"] is JsonObject) {
+            json.getObject("location").getString("name")
+        } else {
+            description.slice(0 until 40) + "…"
+        }
+
         return InstagramPost(
-            title = json.getObject("location").getString("name"),
+            title = title,
             description = """
                                 |<img src="${json.getString("display_url")}"/>
                                 |

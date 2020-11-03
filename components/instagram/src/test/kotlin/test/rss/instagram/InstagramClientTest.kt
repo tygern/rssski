@@ -31,26 +31,8 @@ class InstagramClientTest {
     fun testFetchProfile() = runBlockingTest {
         val result = client.fetchProfile("finnsadventures")
 
-        val expectedResult = InstagramProfile(
-            name = "finnsadventures",
-            description = "Here is my biography",
-            link = URI("http://instagram.example.com/finnsadventures"),
-            imageUrl = URI("http://example.com/hq_photo"),
-            posts = listOf(
-                InstagramPost(
-                    title = "Asbury Park Convention Hall",
-                    description = """
-                        <img src="https://instagram.example.com/display.jpg"/>
-
-                        Asbury Park Convention Hall description
-                    """.trimIndent(),
-                    link = URI("http://instagram.example.com/p/Bx7b96cHeVs"),
-                )
-            ),
-        )
-
         require(result is Result.Success)
-        assertEquals(expectedResult, result.value)
+        assertEquals("finnsadventures", result.value.name)
     }
 
     @Test

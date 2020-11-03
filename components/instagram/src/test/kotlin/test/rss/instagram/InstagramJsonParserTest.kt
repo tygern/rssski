@@ -31,6 +31,15 @@ class InstagramJsonParserTest {
                         Asbury Park Convention Hall description
                     """.trimIndent(),
                     link = URI("http://instagram.example.com/p/Bx7b96cHeVs"),
+                ),
+                InstagramPost(
+                    title = "What a description! Very nice and descri…",
+                    description = """
+                        <img src="https://instagram.example.com/anotherdisplay.jpg"/>
+
+                        What a description! Very nice and descriptive and a bit long.
+                    """.trimIndent(),
+                    link = URI("http://instagram.example.com/p/CHGTddbDpZb"),
                 )
             ),
         )
