@@ -18,6 +18,7 @@ fun rssFromProfile(profile: InstagramProfile) = Rss(
 private fun itemFromPost(post: InstagramPost, profile: InstagramProfile) = Item(
     title = post.title,
     description = post.description,
+    imageUrl = post.imageUrl,
     url = post.link,
     author = profile.name,
 )

@@ -21,11 +21,13 @@ class InstagramRssTest {
                 InstagramPost(
                     title = "Grazing",
                     description = "Grazing is fun",
+                    imageUrl = URI("http://example.com/hq_photo_of_sheep"),
                     link = URI("http://instagram.example.com/p/GRAZE"),
                 ),
                 InstagramPost(
                     title = "Baaaing",
                     description = "Baaaing is fun",
+                    imageUrl = URI("http://example.com/hq_photo_of_sheep"),
                     link = URI("http://instagram.example.com/p/BAAA"),
                 )
             ),
@@ -43,12 +45,14 @@ class InstagramRssTest {
                     Item(
                         title = "Grazing",
                         description = "Grazing is fun",
+                        imageUrl = URI("http://example.com/hq_photo_of_sheep"),
                         url = URI("http://instagram.example.com/p/GRAZE"),
                         author = "sheep",
                     ),
                     Item(
                         title = "Baaaing",
                         description = "Baaaing is fun",
+                        imageUrl = URI("http://example.com/hq_photo_of_sheep"),
                         url = URI("http://instagram.example.com/p/BAAA"),
                         author = "sheep",
                     ),

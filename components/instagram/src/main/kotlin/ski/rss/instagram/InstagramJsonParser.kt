@@ -70,11 +70,8 @@ class InstagramJsonParser(
 
         return InstagramPost(
             title = title,
-            description = """
-                                |<img src="${json.getString("display_url")}"/>
-                                |
-                                |$description
-                            """.trimMargin(),
+            description = description,
+            imageUrl = URI(json.getString("display_url")),
             link = URI("$instagramUrl/p/${json.getString("shortcode")}"),
         )
     }
@@ -95,5 +92,6 @@ data class InstagramProfile(
 data class InstagramPost(
     val title: String,
     val description: String,
+    val imageUrl: URI,
     val link: URI,
 )

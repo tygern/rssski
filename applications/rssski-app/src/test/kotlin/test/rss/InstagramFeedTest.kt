@@ -30,7 +30,8 @@ class InstagramFeedTest {
             assertEquals(HttpStatusCode.OK, response.status())
             assertEquals(ContentType.Application.Rss.withCharset(Charset.defaultCharset()), response.contentType())
 
-            assertEquals("""<rss version="2.0">
+            assertEquals("""<?xml version = "1.0" encoding="utf-8"?>
+                    |<rss version="2.0">
                     |<channel>
                         |<title>finnsadventures</title>
                         |<link>http://localhost:8675/finnsadventures</link>
@@ -43,9 +44,11 @@ class InstagramFeedTest {
                         |<item>
                             |<title>Asbury Park Convention Hall</title>
                             |<link>http://localhost:8675/p/Bx7b96cHeVs</link>
-                            |<description><img src="https://instagram.example.com/display.jpg"/>
-                            |
-                            |Asbury Park Convention Hall description</description>
+                            |<description>
+                                |<![CDATA[<img src="https://instagram.example.com/display.jpg"/><br><br>]]>
+                                |
+                                |Asbury Park Convention Hall description
+                            |</description>
                             |<author>finnsadventures</author>
                             |<guid>http://localhost:8675/p/Bx7b96cHeVs</guid>
                         |</item>

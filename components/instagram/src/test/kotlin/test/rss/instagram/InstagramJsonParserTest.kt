@@ -25,20 +25,14 @@ class InstagramJsonParserTest {
             posts = listOf(
                 InstagramPost(
                     title = "Asbury Park Convention Hall",
-                    description = """
-                        <img src="https://instagram.example.com/display.jpg"/>
-
-                        Asbury Park Convention Hall description
-                    """.trimIndent(),
+                    description = "Asbury Park Convention Hall description",
+                    imageUrl = URI("https://instagram.example.com/display.jpg"),
                     link = URI("http://instagram.example.com/p/Bx7b96cHeVs"),
                 ),
                 InstagramPost(
                     title = "What a description! Very nice and descri…",
-                    description = """
-                        <img src="https://instagram.example.com/anotherdisplay.jpg"/>
-
-                        What a description! Very nice and descriptive and a bit long.
-                    """.trimIndent(),
+                    description = "What a description! Very nice and descriptive and a bit long.",
+                    imageUrl = URI("https://instagram.example.com/anotherdisplay.jpg"),
                     link = URI("http://instagram.example.com/p/CHGTddbDpZb"),
                 )
             ),
