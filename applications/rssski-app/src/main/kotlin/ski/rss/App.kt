@@ -4,6 +4,7 @@ import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
+import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
@@ -27,6 +28,7 @@ fun Application.module(instagramUrl: URI) {
     install(DefaultHeaders)
     install(CallLogging)
     install(Locations)
+    install(AutoHeadResponse)
     install(ContentNegotiation) {
         json(json = Json(DefaultJson) {
             prettyPrint = true
