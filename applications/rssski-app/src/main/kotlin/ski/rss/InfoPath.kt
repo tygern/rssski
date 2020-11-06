@@ -8,12 +8,12 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 
 @KtorExperimentalLocationsAPI
-@Location("/")
-class IndexPath
+@Location("/info")
+class InfoPath
 
 @KtorExperimentalLocationsAPI
-fun Route.index() {
-    get<IndexPath> {
+fun Route.info() {
+    get<InfoPath> {
         call.respond(mapOf("application" to "rssski"))
     }
 }

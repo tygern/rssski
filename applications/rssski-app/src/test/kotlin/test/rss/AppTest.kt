@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
 class AppTest {
     @Test
     fun testEmptyHome() = testApp {
-        handleRequest(HttpMethod.Get, "/").apply {
+        handleRequest(HttpMethod.Get, "/info").apply {
             assertEquals(200, response.status()?.value)
 
             val body = Json.decodeFromString<JsonObject>(response.content!!)

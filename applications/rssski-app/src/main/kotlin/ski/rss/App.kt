@@ -8,6 +8,9 @@ import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
+import io.ktor.http.content.resource
+import io.ktor.http.content.resources
+import io.ktor.http.content.static
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
 import io.ktor.routing.Routing
@@ -44,8 +47,14 @@ fun Application.module(instagramUrl: URI) {
     )
 
     install(Routing) {
-        index()
         instagramFeed(instagramClient)
+
+        info()
+
+        resource("/", "static/index.html")
+        static {
+            resources("static")
+        }
     }
 }
 
