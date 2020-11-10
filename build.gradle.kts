@@ -36,4 +36,4 @@ subprojects kotlinConfig@{
     }
 }
 
-fun Project.isNotKotlinProject() = name == "applications" || name == "components" || name == "databases"
+fun Project.isNotKotlinProject() = name == "applications" || name == "components"
