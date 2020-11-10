@@ -8,7 +8,7 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respondText
 import io.ktor.routing.Route
-import ski.rss.instagram.InstagramClient
+import ski.rss.instagram.InstagramService
 import ski.rss.instagram.Result
 import ski.rss.rss.serialize
 
@@ -17,9 +17,9 @@ import ski.rss.rss.serialize
 data class InstagramFeedPath(val name: String)
 
 @KtorExperimentalLocationsAPI
-fun Route.instagramFeed(instagramClient: InstagramClient) {
+fun Route.instagramFeed(instagramService: InstagramService) {
     get<InstagramFeedPath> {
-        when (val result = instagramClient.fetchProfile(it.name)) {
+        when (val result = instagramService.fetchProfile(it.name)) {
             is Result.Success -> {
                 call.respondText(
                     text = rssFromProfile(result.value).serialize(),

@@ -8,9 +8,6 @@ import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
-import io.ktor.http.content.resource
-import io.ktor.http.content.resources
-import io.ktor.http.content.static
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
 import io.ktor.routing.Routing
@@ -22,6 +19,7 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.json.Json
 import ski.rss.instagram.InstagramClient
 import ski.rss.instagram.InstagramJsonParser
+import ski.rss.instagram.InstagramService
 import ski.rss.instagramfeed.instagramFeed
 import java.net.URI
 
@@ -42,12 +40,15 @@ fun Application.module(instagramUrl: URI) {
     val instagramJsonParser = InstagramJsonParser(instagramUrl)
     val instagramClient = InstagramClient(
         instagramUrl = instagramUrl,
-        jsonParser = instagramJsonParser,
         httpClient = httpClient,
+    )
+    val instagramService = InstagramService(
+        instagramClient = instagramClient,
+        jsonParser = instagramJsonParser,
     )
 
     install(Routing) {
-        instagramFeed(instagramClient)
+        instagramFeed(instagramService)
         info()
         staticContent()
     }
