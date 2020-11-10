@@ -11,7 +11,7 @@ Consume RSS feeds from other sources.
 
 1.  Run app.
     ```bash
-    java -jar applications/rssski-app/build/libs/rssski-app.jar
+    INSTAGRAM_URL="https://www.instagram.com" java -jar applications/rssski-app/build/libs/rssski-app.jar
     ```
 
 ## Deploy
