@@ -48,13 +48,8 @@ fun Application.module(instagramUrl: URI) {
 
     install(Routing) {
         instagramFeed(instagramClient)
-
         info()
-
-        resource("/", "static/index.html")
-        static {
-            resources("static")
-        }
+        staticContent()
     }
 }
 
