@@ -12,7 +12,6 @@ subprojects kotlinConfig@{
 
         set("jedisVersion", "3.3.0")
         set("logbackVersion", "1.2.3")
-        set("okHttpVersion", "4.9.0")
     }
 
     group = "ski.rss"

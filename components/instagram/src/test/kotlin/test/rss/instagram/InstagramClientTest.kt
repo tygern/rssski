@@ -1,51 +1,47 @@
 package test.rss.instagram
 
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respond
+import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod.Companion.Get
+import io.ktor.http.Url
+import io.ktor.http.fullPath
+import io.ktor.http.headersOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import okhttp3.OkHttpClient
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
-import org.junit.Before
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 import ski.rss.instagram.InstagramClient
+import java.net.URI
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class InstagramClientTest {
-    private lateinit var mockWebServer: MockWebServer
-    private lateinit var client: InstagramClient
-
-
-    @Before
-    fun setUp() {
-        mockWebServer = MockWebServer()
-        mockWebServer.start()
-        client = InstagramClient(
-            instagramUrl = mockWebServer.url("").toUri(),
-            httpClient = OkHttpClient(),
-        )
-
-    }
+    private val client = InstagramClient(
+        instagramUrl = URI("http://instagram.example.com"),
+        httpClient = fakeHttpClient,
+    )
 
     @Test
-    fun testFetchProfile() {
-        val response = MockResponse()
-            .setResponseCode(200)
-            .setBody("a response")
-
-        mockWebServer.enqueue(response)
-
+    fun testFetchProfile() = runBlockingTest {
         val result = client.fetchProfile("finnsadventures")
 
         assertEquals("a response", result)
-
-        val request = mockWebServer.takeRequest()
-        assertEquals("GET", request.method)
-        assertEquals("/finnsadventures?__a=1", request.path)
     }
+}
 
-    @After
-    fun tearDown() {
-        mockWebServer.shutdown()
+private fun Url.location() = "${protocol.name}://$host$fullPath"
+
+private val fakeHttpClient = HttpClient(MockEngine) {
+    engine {
+        addHandler { request ->
+            when (request.method to request.url.location()) {
+                Get to "http://instagram.example.com/finnsadventures?__a=1" -> {
+                    val responseHeaders = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
+                    respond("a response", headers = responseHeaders)
+                }
+                else -> error("Unhandled ${request.method} to ${request.url.location()}")
+            }
+        }
     }
 }

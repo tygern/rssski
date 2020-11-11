@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val jedisVersion: String by extra
 val ktorVersion: String by extra
 val logbackVersion: String by extra
-val okHttpVersion: String by extra
 
 dependencies {
     implementation(project(":components:instagram"))
@@ -12,7 +11,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("redis.clients:jedis:$jedisVersion")
-    implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
 
     testImplementation("io.ktor:ktor-server-jetty:$ktorVersion")
 }

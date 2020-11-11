@@ -4,7 +4,7 @@ class InstagramResponseCache(
     private val instagramClient: InstagramClient,
     private val responseRepository: InstagramResponseRepository,
 ) {
-    fun store(name: String) {
+    suspend fun store(name: String) {
         val profileData = instagramClient.fetchProfile(name)
 
         responseRepository.save(name, profileData)

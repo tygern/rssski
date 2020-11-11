@@ -17,5 +17,7 @@ class InstagramWorker(
         logger.info("Worker $name working on $task")
 
         instagramResponseCache.store(task)
+
+        logger.info("Worker $name completed $task")
     }
 }
