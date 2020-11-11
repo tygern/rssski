@@ -4,14 +4,20 @@ Consume RSS feeds from other sources.
 
 ## Build and run
 
-1.  Build app.
+1.  Build app and worker.
     ```bash
     ./gradlew clean build
     ```
 
+1.  Run worker.
+    ```bash
+    INSTAGRAM_URL="https://www.instagram.com" REDIS_URL="redis://127.0.0.1:6379" java -jar applications/instagram-worker/build/libs/instagram-worker.jar
+    ```
+
+
 1.  Run app.
     ```bash
-    INSTAGRAM_URL="https://www.instagram.com" java -jar applications/rssski-app/build/libs/rssski-app.jar
+    REDIS_URL="redis://127.0.0.1:6379" java -jar applications/rssski-app/build/libs/rssski-app.jar
     ```
 
 ## Deploy

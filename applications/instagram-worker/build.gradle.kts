@@ -6,6 +6,7 @@ val logbackVersion: String by extra
 
 dependencies {
     implementation(project(":components:instagram"))
+    implementation(project(":components:redis-support"))
     implementation(project(":components:worker-support"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1")

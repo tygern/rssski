@@ -8,6 +8,7 @@ dependencies {
     implementation(project(":components:instagram"))
     implementation(project(":components:instagram-feed"))
     implementation(project(":components:rss"))
+    implementation(project(":components:redis-support"))
 
     implementation("io.ktor:ktor-server-jetty:$ktorVersion")
     implementation("io.ktor:ktor-locations:$ktorVersion")

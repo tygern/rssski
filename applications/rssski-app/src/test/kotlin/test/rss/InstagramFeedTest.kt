@@ -7,12 +7,14 @@ import io.ktor.http.withCharset
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.contentType
 import io.ktor.server.testing.handleRequest
+import io.ktor.util.KtorExperimentalAPI
 import redis.clients.jedis.JedisPool
 import java.nio.charset.Charset
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 class InstagramFeedTest {
     private val jedisPool = JedisPool()

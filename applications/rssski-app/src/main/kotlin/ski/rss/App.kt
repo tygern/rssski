@@ -15,15 +15,16 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.jetty.Jetty
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.json.Json
-import redis.clients.jedis.JedisPool
 import ski.rss.instagram.InstagramJsonParser
 import ski.rss.instagram.InstagramProfileService
 import ski.rss.instagram.InstagramResponseRepository
 import ski.rss.instagramfeed.instagramFeed
+import ski.rss.redissupport.jedisPool
+import java.net.URI
 
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
-fun Application.module() {
+fun Application.module(redisUrl: URI) {
     install(DefaultHeaders)
     install(CallLogging)
     install(Locations)
@@ -34,7 +35,7 @@ fun Application.module() {
         })
     }
 
-    val jedisPool = JedisPool()
+    val jedisPool = jedisPool(redisUrl)
 
     val instagramJsonParser = InstagramJsonParser()
     val instagramResponseRepository = InstagramResponseRepository(jedisPool)
@@ -55,10 +56,12 @@ fun Application.module() {
 @KtorExperimentalLocationsAPI
 fun main() {
     val port = System.getenv("PORT")?.toInt() ?: 8080
+    val redisUrl = System.getenv("REDIS_URL")?.let(::URI)
+        ?: throw RuntimeException("Please set the REDIS_URL environment variable")
 
     embeddedServer(
         factory = Jetty,
         port = port,
-        module = { module() }
+        module = { module(redisUrl) }
     ).start()
 }
