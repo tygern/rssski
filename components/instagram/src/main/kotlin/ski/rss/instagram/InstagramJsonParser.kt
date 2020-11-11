@@ -8,9 +8,11 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.long
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
+import java.time.Instant
 
 class InstagramJsonParser {
     companion object {
@@ -51,7 +53,8 @@ class InstagramJsonParser {
             description = json.getString("biography"),
             link = URI("https://www.instagram.com/$username"),
             imageUrl = URI(json.getString("profile_pic_url_hd")),
-            posts = posts.map(this::instagramPost),
+            posts = posts.map(this::instagramPost)
+                .sortedByDescending(InstagramPost::takenAt),
         )
     }
 
@@ -66,11 +69,14 @@ class InstagramJsonParser {
             description.slice(0 until 40) + "…"
         }
 
+        val takenAt = json["taken_at_timestamp"]!!.jsonPrimitive.long
+
         return InstagramPost(
             title = title,
             description = description,
             imageUrl = URI(json.getString("display_url")),
             link = URI("https://www.instagram.com/p/${json.getString("shortcode")}"),
+            takenAt = Instant.ofEpochSecond(takenAt)
         )
     }
 }
@@ -92,4 +98,5 @@ data class InstagramPost(
     val description: String,
     val imageUrl: URI,
     val link: URI,
+    val takenAt: Instant
 )

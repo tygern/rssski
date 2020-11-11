@@ -5,6 +5,7 @@ import ski.rss.rss.Item
 import ski.rss.rss.Rss
 import ski.rss.rss.serialize
 import java.net.URI
+import java.time.Instant
 import kotlin.test.assertEquals
 
 class RssSerializationTest {
@@ -22,6 +23,7 @@ class RssSerializationTest {
                     description = "Seed basics",
                     imageUrl = URI("https://images.example.com/seeds.jpg"),
                     author = "Christopher Wren",
+                    pubDate = Instant.ofEpochSecond(1605101774)
                 ),
                 Item(
                     title = "Millet 304",
@@ -29,6 +31,7 @@ class RssSerializationTest {
                     description = "Get your beak around millet",
                     imageUrl = URI("https://images.example.com/millet.jpg"),
                     author = "Florence Nightingale",
+                    pubDate = Instant.ofEpochSecond(1603101774)
                 ),
             ),
         )
@@ -57,6 +60,7 @@ class RssSerializationTest {
                         |</description>
                         |<author>Christopher Wren</author>
                         |<guid>https://cfb.example.com/seeds.html</guid>
+                        |<pubDate>Wed, 11 Nov 2020 13:36:14 GMT</pubDate>
                     |</item>
                     |<item>
                         |<title>Millet 304</title>
@@ -68,6 +72,7 @@ class RssSerializationTest {
                         |</description>
                         |<author>Florence Nightingale</author>
                         |<guid>https://cfb.example.com/millet.html</guid>
+                        |<pubDate>Mon, 19 Oct 2020 10:02:54 GMT</pubDate>
                     |</item>
                 |</channel>
             |</rss>

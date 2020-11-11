@@ -54,6 +54,7 @@ class InstagramFeedTest {
                             |</description>
                             |<author>finnsadventures</author>
                             |<guid>https://www.instagram.com/p/Bx7b96cHeVs</guid>
+                            |<pubDate>Sun, 26 May 2019 14:14:08 GMT</pubDate>
                         |</item>
                     |</channel>
                 |</rss>

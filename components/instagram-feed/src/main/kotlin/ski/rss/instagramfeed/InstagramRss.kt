@@ -21,4 +21,5 @@ private fun itemFromPost(post: InstagramPost, profile: InstagramProfile) = Item(
     imageUrl = post.imageUrl,
     url = post.link,
     author = profile.name,
+    pubDate = post.takenAt
 )

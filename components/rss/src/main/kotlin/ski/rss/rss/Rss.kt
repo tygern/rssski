@@ -1,6 +1,9 @@
 package ski.rss.rss
 
 import java.net.URI
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 data class Rss(
     val title: String,
@@ -16,6 +19,7 @@ data class Item(
     val imageUrl: URI,
     val url: URI,
     val author: String,
+    val pubDate: Instant,
 )
 
 fun Rss.serialize(): String {
@@ -47,6 +51,8 @@ fun Rss.serialize(): String {
 }
 
 private fun Item.serialize(): String {
+    val formatter = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC)
+
     return """
             |<item>
                 |<title>${title.escape()}</title>
@@ -58,6 +64,7 @@ private fun Item.serialize(): String {
                 |</description>
                 |<author>${author.escape()}</author>
                 |<guid>${url.escape()}</guid>
+                |<pubDate>${formatter.format(pubDate)}</pubDate>
             |</item>
             |
         """.trimMargin()

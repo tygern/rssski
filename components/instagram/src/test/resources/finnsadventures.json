@@ -8,6 +8,22 @@
         "edges": [
           {
             "node": {
+              "shortcode": "CHGTddbDpZb",
+              "display_url": "https://instagram.example.com/anotherdisplay.jpg",
+              "taken_at_timestamp": 1604101774,
+              "edge_media_to_caption": {
+                "edges": [
+                  {
+                    "node": {
+                      "text": "What a description! Very nice and descriptive and a bit long."
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
               "edge_media_to_caption": {
                 "edges": [
                   {
@@ -19,23 +35,9 @@
               },
               "shortcode": "Bx7b96cHeVs",
               "display_url": "https://instagram.example.com/display.jpg",
+              "taken_at_timestamp": 1605101774,
               "location": {
                 "name": "Asbury Park Convention Hall"
-              }
-            }
-          },
-          {
-            "node": {
-              "shortcode": "CHGTddbDpZb",
-              "display_url": "https://instagram.example.com/anotherdisplay.jpg",
-              "edge_media_to_caption": {
-                "edges": [
-                  {
-                    "node": {
-                      "text": "What a description! Very nice and descriptive and a bit long."
-                    }
-                  }
-                ]
               }
             }
           }

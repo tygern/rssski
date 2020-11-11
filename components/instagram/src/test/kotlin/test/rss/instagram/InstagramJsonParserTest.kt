@@ -6,6 +6,7 @@ import ski.rss.instagram.InstagramPost
 import ski.rss.instagram.InstagramProfile
 import ski.rss.instagram.Success
 import java.net.URI
+import java.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -29,12 +30,14 @@ class InstagramJsonParserTest {
                     description = "Asbury Park Convention Hall description",
                     imageUrl = URI("https://instagram.example.com/display.jpg"),
                     link = URI("https://www.instagram.com/p/Bx7b96cHeVs"),
+                    takenAt = Instant.ofEpochSecond(1605101774),
                 ),
                 InstagramPost(
                     title = "What a description! Very nice and descri…",
                     description = "What a description! Very nice and descriptive and a bit long.",
                     imageUrl = URI("https://instagram.example.com/anotherdisplay.jpg"),
                     link = URI("https://www.instagram.com/p/CHGTddbDpZb"),
+                    takenAt = Instant.ofEpochSecond(1604101774),
                 )
             ),
         )

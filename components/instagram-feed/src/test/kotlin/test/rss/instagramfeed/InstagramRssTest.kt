@@ -6,6 +6,7 @@ import ski.rss.instagramfeed.rssFromProfile
 import ski.rss.rss.Item
 import ski.rss.rss.Rss
 import java.net.URI
+import java.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -23,12 +24,14 @@ class InstagramRssTest {
                     description = "Grazing is fun",
                     imageUrl = URI("http://example.com/hq_photo_of_sheep"),
                     link = URI("http://instagram.example.com/p/GRAZE"),
+                    takenAt = Instant.ofEpochSecond(1605101774),
                 ),
                 InstagramPost(
                     title = "Baaaing",
                     description = "Baaaing is fun",
                     imageUrl = URI("http://example.com/hq_photo_of_sheep"),
                     link = URI("http://instagram.example.com/p/BAAA"),
+                    takenAt = Instant.ofEpochSecond(1603101774),
                 )
             ),
         )
@@ -48,6 +51,7 @@ class InstagramRssTest {
                         imageUrl = URI("http://example.com/hq_photo_of_sheep"),
                         url = URI("http://instagram.example.com/p/GRAZE"),
                         author = "sheep",
+                        pubDate = Instant.ofEpochSecond(1605101774),
                     ),
                     Item(
                         title = "Baaaing",
@@ -55,6 +59,7 @@ class InstagramRssTest {
                         imageUrl = URI("http://example.com/hq_photo_of_sheep"),
                         url = URI("http://instagram.example.com/p/BAAA"),
                         author = "sheep",
+                        pubDate = Instant.ofEpochSecond(1603101774),
                     ),
                 ),
             ),
