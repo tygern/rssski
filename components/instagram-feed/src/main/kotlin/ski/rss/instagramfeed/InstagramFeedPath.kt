@@ -8,8 +8,9 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respondText
 import io.ktor.routing.Route
+import ski.rss.instagram.Failure
 import ski.rss.instagram.InstagramProfileService
-import ski.rss.instagram.Result
+import ski.rss.instagram.Success
 import ski.rss.rss.serialize
 
 @KtorExperimentalLocationsAPI
@@ -20,13 +21,13 @@ data class InstagramFeedPath(val name: String)
 fun Route.instagramFeed(profileService: InstagramProfileService) {
     get<InstagramFeedPath> {
         when (val result = profileService.fetch(it.name)) {
-            is Result.Success -> {
+            is Success -> {
                 call.respondText(
                     text = rssFromProfile(result.value).serialize(),
                     contentType = ContentType.Application.Rss,
                 )
             }
-            is Result.Failure -> {
+            is Failure -> {
                 call.respondText(
                     text = result.reason,
                     status = HttpStatusCode.ServiceUnavailable

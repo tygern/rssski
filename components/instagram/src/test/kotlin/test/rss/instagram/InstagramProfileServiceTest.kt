@@ -3,10 +3,11 @@ package test.rss.instagram
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import ski.rss.instagram.Failure
 import ski.rss.instagram.InstagramJsonParser
 import ski.rss.instagram.InstagramProfileService
 import ski.rss.instagram.InstagramResponseRepository
-import ski.rss.instagram.Result
+import ski.rss.instagram.Success
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -27,7 +28,7 @@ class InstagramProfileServiceTest {
 
         val result = service.fetch(testName)
 
-        require(result is Result.Success)
+        require(result is Success)
         assertEquals(testName, result.value.name)
     }
 
@@ -37,7 +38,7 @@ class InstagramProfileServiceTest {
 
         val result = service.fetch(testName)
 
-        require(result is Result.Failure)
+        require(result is Failure)
         assertEquals("Feed not found for Instagram account finnsadventures.", result.reason)
     }
 
@@ -47,7 +48,7 @@ class InstagramProfileServiceTest {
 
         val result = service.fetch(testName)
 
-        require(result is Result.Failure)
+        require(result is Failure)
         assertEquals("Failed to parse JSON from Instagram response.", result.reason)
     }
 }

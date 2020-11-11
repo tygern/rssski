@@ -12,8 +12,9 @@ import io.ktor.http.headersOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
+import ski.rss.instagram.Failure
 import ski.rss.instagram.InstagramClient
-import ski.rss.instagram.Result
+import ski.rss.instagram.Success
 import java.net.URI
 import kotlin.test.assertEquals
 
@@ -28,7 +29,7 @@ class InstagramClientTest {
     fun testFetchProfile() = runBlockingTest {
         val result = client.fetchProfile("finnsadventures")
 
-        require(result is Result.Success)
+        require(result is Success)
         assertEquals("a response", result.value)
     }
 
@@ -36,7 +37,7 @@ class InstagramClientTest {
     fun testFetchProfileFailure() = runBlockingTest {
         val result = client.fetchProfile("noprofilehere")
 
-        require(result is Result.Failure)
+        require(result is Failure)
         assertEquals("Failed to fetch Instagram profile noprofilehere: Client request(http://instagram.example.com/noprofilehere?__a=1) invalid: 400 Bad Request", result.reason)
     }
 }

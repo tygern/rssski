@@ -2,8 +2,9 @@ package ski.rss.instagramworker
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import ski.rss.instagram.Failure
 import ski.rss.instagram.InstagramResponseCache
-import ski.rss.instagram.Result
+import ski.rss.instagram.Success
 import ski.rss.workersupport.Worker
 
 class InstagramWorker(
@@ -18,8 +19,8 @@ class InstagramWorker(
         logger.info("Worker $name working on $task")
 
         when (val result = instagramResponseCache.store(task)) {
-            is Result.Success -> logger.info("Worker $name completed $task")
-            is Result.Failure -> logger.info("Worker $name failed $task: ${result.reason}")
+            is Success -> logger.info("Worker $name completed $task")
+            is Failure -> logger.info("Worker $name failed $task: ${result.reason}")
         }
     }
 }

@@ -33,9 +33,9 @@ class InstagramJsonParser {
                 {}
             """.trimIndent(), json)
 
-            Result.Failure("Failed to parse JSON from Instagram response.")
+            Failure("Failed to parse JSON from Instagram response.")
         } else {
-            Result.Success(instagramFeed(jsonObject))
+            Success(instagramFeed(jsonObject))
         }
     }
 

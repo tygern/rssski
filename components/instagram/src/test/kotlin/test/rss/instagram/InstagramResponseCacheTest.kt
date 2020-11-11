@@ -6,10 +6,11 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import ski.rss.instagram.Failure
 import ski.rss.instagram.InstagramClient
 import ski.rss.instagram.InstagramResponseCache
 import ski.rss.instagram.InstagramResponseRepository
-import ski.rss.instagram.Result
+import ski.rss.instagram.Success
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -27,21 +28,21 @@ class InstagramResponseCacheTest {
 
     @Test
     fun testStoreProfile() = runBlockingTest {
-        coEvery { instagramClient.fetchProfile(testName) } returns Result.Success("{\"some\": \"response\"}")
+        coEvery { instagramClient.fetchProfile(testName) } returns Success("{\"some\": \"response\"}")
 
         val result = cache.store(testName)
 
-        require(result is Result.Success)
+        require(result is Success)
         verify { responseRepository.save(testName, "{\"some\": \"response\"}") }
     }
 
     @Test
     fun testStoreProfileFailure() = runBlockingTest {
-        coEvery { instagramClient.fetchProfile(testName) } returns Result.Failure("An error message")
+        coEvery { instagramClient.fetchProfile(testName) } returns Failure("An error message")
 
         val result = cache.store(testName)
 
-        require(result is Result.Failure)
+        require(result is Failure)
         assertEquals("An error message", result.reason)
         verify { responseRepository wasNot Called }
     }

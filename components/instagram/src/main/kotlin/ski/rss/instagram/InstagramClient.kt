@@ -11,8 +11,8 @@ class InstagramClient(
 ) {
     suspend fun fetchProfile(name: String): Result<String> = try {
         val response = httpClient.get<String>("$instagramUrl/$name?__a=1")
-        Result.Success(response)
+        Success(response)
     } catch (e: ClientRequestException) {
-        Result.Failure("Failed to fetch Instagram profile $name: ${e.message}")
+        Failure("Failed to fetch Instagram profile $name: ${e.message}")
     }
 }

@@ -6,7 +6,7 @@ class InstagramProfileService(
 ) {
     fun fetch(name: String): Result<InstagramProfile> {
         val profileData = responseRepository.fetch(name)
-            ?: return Result.Failure("Feed not found for Instagram account $name.")
+            ?: return Failure("Feed not found for Instagram account $name.")
 
         return jsonParser.readProfile(profileData)
     }
