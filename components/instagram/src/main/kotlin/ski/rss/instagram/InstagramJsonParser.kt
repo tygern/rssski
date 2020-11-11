@@ -12,9 +12,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
 
-class InstagramJsonParser(
-    private val instagramUrl: URI,
-) {
+class InstagramJsonParser {
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(InstagramJsonParser::class.java)
     }
@@ -51,7 +49,7 @@ class InstagramJsonParser(
         return InstagramProfile(
             name = username,
             description = json.getString("biography"),
-            link = URI("$instagramUrl/$username"),
+            link = URI("https://www.instagram.com/$username"),
             imageUrl = URI(json.getString("profile_pic_url_hd")),
             posts = posts.map(this::instagramPost),
         )
@@ -72,7 +70,7 @@ class InstagramJsonParser(
             title = title,
             description = description,
             imageUrl = URI(json.getString("display_url")),
-            link = URI("$instagramUrl/p/${json.getString("shortcode")}"),
+            link = URI("https://www.instagram.com/p/${json.getString("shortcode")}"),
         )
     }
 }

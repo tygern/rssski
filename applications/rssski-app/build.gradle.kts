@@ -1,6 +1,8 @@
 import org.gradle.api.file.DuplicatesStrategy.INCLUDE
 
 val ktorVersion: String by extra
+val jedisVersion: String by extra
+val logbackVersion: String by extra
 
 dependencies {
     implementation(project(":components:instagram"))
@@ -10,9 +12,9 @@ dependencies {
     implementation("io.ktor:ktor-server-jetty:$ktorVersion")
     implementation("io.ktor:ktor-locations:$ktorVersion")
     implementation("io.ktor:ktor-serialization:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
 
-    implementation("ch.qos.logback:logback-classic:1.2.3")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("redis.clients:jedis:$jedisVersion")
 
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
 }

@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class InstagramJsonParserTest {
-    private val deserializer = InstagramJsonParser(URI("http://instagram.example.com"))
+    private val deserializer = InstagramJsonParser()
 
     @Test
     fun readProfile() {
@@ -20,20 +20,20 @@ class InstagramJsonParserTest {
         val expectedResult = InstagramProfile(
             name = "finnsadventures",
             description = "Here is my biography",
-            link = URI("http://instagram.example.com/finnsadventures"),
+            link = URI("https://www.instagram.com/finnsadventures"),
             imageUrl = URI("http://example.com/hq_photo"),
             posts = listOf(
                 InstagramPost(
                     title = "Asbury Park Convention Hall",
                     description = "Asbury Park Convention Hall description",
                     imageUrl = URI("https://instagram.example.com/display.jpg"),
-                    link = URI("http://instagram.example.com/p/Bx7b96cHeVs"),
+                    link = URI("https://www.instagram.com/p/Bx7b96cHeVs"),
                 ),
                 InstagramPost(
                     title = "What a description! Very nice and descri…",
                     description = "What a description! Very nice and descriptive and a bit long.",
                     imageUrl = URI("https://instagram.example.com/anotherdisplay.jpg"),
-                    link = URI("http://instagram.example.com/p/CHGTddbDpZb"),
+                    link = URI("https://www.instagram.com/p/CHGTddbDpZb"),
                 )
             ),
         )

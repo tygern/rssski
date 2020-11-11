@@ -2,8 +2,6 @@ package ski.rss
 
 import io.ktor.application.Application
 import io.ktor.application.install
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
 import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
@@ -17,15 +15,15 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.jetty.Jetty
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.json.Json
-import ski.rss.instagram.InstagramClient
+import redis.clients.jedis.JedisPool
 import ski.rss.instagram.InstagramJsonParser
-import ski.rss.instagram.InstagramService
+import ski.rss.instagram.InstagramProfileService
+import ski.rss.instagram.InstagramResponseRepository
 import ski.rss.instagramfeed.instagramFeed
-import java.net.URI
 
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
-fun Application.module(instagramUrl: URI) {
+fun Application.module() {
     install(DefaultHeaders)
     install(CallLogging)
     install(Locations)
@@ -36,15 +34,14 @@ fun Application.module(instagramUrl: URI) {
         })
     }
 
-    val httpClient = HttpClient(CIO)
-    val instagramJsonParser = InstagramJsonParser(instagramUrl)
-    val instagramClient = InstagramClient(
-        instagramUrl = instagramUrl,
-        httpClient = httpClient,
-    )
-    val instagramService = InstagramService(
-        instagramClient = instagramClient,
+    val jedisPool = JedisPool()
+
+    val instagramJsonParser = InstagramJsonParser()
+    val instagramResponseRepository = InstagramResponseRepository(jedisPool)
+
+    val instagramService = InstagramProfileService(
         jsonParser = instagramJsonParser,
+        responseRepository = instagramResponseRepository
     )
 
     install(Routing) {
@@ -58,11 +55,10 @@ fun Application.module(instagramUrl: URI) {
 @KtorExperimentalLocationsAPI
 fun main() {
     val port = System.getenv("PORT")?.toInt() ?: 8080
-    val instagramUrl = URI(System.getenv("INSTAGRAM_URL") ?: throw RuntimeException("Please set the INSTAGRAM_URL environment variable"))
 
     embeddedServer(
         factory = Jetty,
         port = port,
-        module = { module(instagramUrl = instagramUrl) }
+        module = { module() }
     ).start()
 }

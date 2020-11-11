@@ -7,22 +7,23 @@ import io.ktor.http.withCharset
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.contentType
 import io.ktor.server.testing.handleRequest
+import redis.clients.jedis.JedisPool
 import java.nio.charset.Charset
-import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @KtorExperimentalLocationsAPI
 class InstagramFeedTest {
-
-    private val fakeInstagramServer = FakeInstagramServer(port = 8675)
+    private val jedisPool = JedisPool()
 
     @BeforeTest
-    fun setUp() = fakeInstagramServer.start()
-
-    @AfterTest
-    fun tearDown() = fakeInstagramServer.stop()
+    fun setUp() {
+        jedisPool.resource.use {
+            it.set("instagram:finnsadventures", javaClass.getResource("/finnsadventures.json").readText())
+            it.set("instagram:givemejunk", "<junk>")
+        }
+    }
 
     @Test
     fun testFeed() = testApp {
@@ -34,23 +35,23 @@ class InstagramFeedTest {
                     |<rss version="2.0">
                     |<channel>
                         |<title>finnsadventures</title>
-                        |<link>http://localhost:8675/finnsadventures</link>
+                        |<link>https://www.instagram.com/finnsadventures</link>
                         |<description>Here is my biography</description>
                         |<image>
                             |<title>finnsadventures</title>
-                            |<link>http://localhost:8675/finnsadventures</link>
+                            |<link>https://www.instagram.com/finnsadventures</link>
                             |<url>http://example.com/hq_photo</url>
                         |</image>
                         |<item>
                             |<title>Asbury Park Convention Hall</title>
-                            |<link>http://localhost:8675/p/Bx7b96cHeVs</link>
+                            |<link>https://www.instagram.com/p/Bx7b96cHeVs</link>
                             |<description>
                                 |<![CDATA[<img src="https://instagram.example.com/display.jpg"/><br><br>]]>
                                 |
                                 |Asbury Park Convention Hall description
                             |</description>
                             |<author>finnsadventures</author>
-                            |<guid>http://localhost:8675/p/Bx7b96cHeVs</guid>
+                            |<guid>https://www.instagram.com/p/Bx7b96cHeVs</guid>
                         |</item>
                     |</channel>
                 |</rss>
