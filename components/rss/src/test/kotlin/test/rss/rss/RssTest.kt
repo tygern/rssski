@@ -8,7 +8,7 @@ import java.net.URI
 import java.time.Instant
 import kotlin.test.assertEquals
 
-class RssSerializationTest {
+class RssTest {
     @Test
     fun testSerialize() {
         val rss = Rss(
@@ -20,7 +20,7 @@ class RssSerializationTest {
                 Item(
                     title = "Seeds 101",
                     url = URI("https://cfb.example.com/seeds.html"),
-                    description = "Seed basics",
+                    description = "Seed basics\nAll about hulls",
                     imageUrl = URI("https://images.example.com/seeds.jpg"),
                     author = "Christopher Wren",
                     pubDate = Instant.ofEpochSecond(1605101774)
@@ -56,7 +56,7 @@ class RssSerializationTest {
                         |<description>
                             |<![CDATA[<img src="https://images.example.com/seeds.jpg"/><br><br>]]>
                             |
-                            |Seed basics
+                            |Seed basics<![CDATA[<br>]]>All about hulls
                         |</description>
                         |<author>Christopher Wren</author>
                         |<guid>https://cfb.example.com/seeds.html</guid>

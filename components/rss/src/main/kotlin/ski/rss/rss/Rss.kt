@@ -58,9 +58,9 @@ private fun Item.serialize(): String {
                 |<title>${title.escape()}</title>
                 |<link>${url.escape()}</link>
                 |<description>
-                    |<![CDATA[<img src="$imageUrl"/><br><br>]]>
+                    |${xmlEscape("<img src=\"$imageUrl\"/><br><br>")}
                     |
-                    |${description.escape()}
+                    |${description.escape().replace("\n", xmlEscape("<br>"))}
                 |</description>
                 |<author>${author.escape()}</author>
                 |<guid>${url.escape()}</guid>
@@ -69,6 +69,8 @@ private fun Item.serialize(): String {
             |
         """.trimMargin()
 }
+
+private fun xmlEscape(string: String) = "<![CDATA[$string]]>"
 
 private fun String.escape(): String {
     val text = this@escape
