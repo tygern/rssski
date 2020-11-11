@@ -5,6 +5,7 @@ import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod.Companion.Get
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.Url
 import io.ktor.http.fullPath
 import io.ktor.http.headersOf
@@ -12,6 +13,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 import ski.rss.instagram.InstagramClient
+import ski.rss.instagram.Result
 import java.net.URI
 import kotlin.test.assertEquals
 
@@ -26,7 +28,16 @@ class InstagramClientTest {
     fun testFetchProfile() = runBlockingTest {
         val result = client.fetchProfile("finnsadventures")
 
-        assertEquals("a response", result)
+        require(result is Result.Success)
+        assertEquals("a response", result.value)
+    }
+
+    @Test
+    fun testFetchProfileFailure() = runBlockingTest {
+        val result = client.fetchProfile("noprofilehere")
+
+        require(result is Result.Failure)
+        assertEquals("Failed to fetch Instagram profile noprofilehere: Client request(http://instagram.example.com/noprofilehere?__a=1) invalid: 400 Bad Request", result.reason)
     }
 }
 
@@ -39,6 +50,14 @@ private val fakeHttpClient = HttpClient(MockEngine) {
                 Get to "http://instagram.example.com/finnsadventures?__a=1" -> {
                     val responseHeaders = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
                     respond("a response", headers = responseHeaders)
+                }
+                Get to "http://instagram.example.com/noprofilehere?__a=1" -> {
+                    val responseHeaders = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
+                    respond(
+                        content = "an error message",
+                        headers = responseHeaders,
+                        status = HttpStatusCode.BadRequest
+                    )
                 }
                 else -> error("Unhandled ${request.method} to ${request.url.location()}")
             }
