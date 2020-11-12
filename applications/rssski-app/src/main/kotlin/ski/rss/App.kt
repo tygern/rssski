@@ -6,6 +6,9 @@ import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
+import io.ktor.features.ForwardedHeaderSupport
+import io.ktor.features.HttpsRedirect
+import io.ktor.features.XForwardedHeaderSupport
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
 import io.ktor.routing.Routing
@@ -24,7 +27,10 @@ import java.net.URI
 
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
-fun Application.module(redisUrl: URI) {
+fun Application.module(
+    redisUrl: URI,
+    forceHttps: Boolean,
+) {
     install(DefaultHeaders)
     install(CallLogging)
     install(Locations)
@@ -33,6 +39,11 @@ fun Application.module(redisUrl: URI) {
         json(json = Json(DefaultJson) {
             prettyPrint = true
         })
+    }
+
+    if (forceHttps) {
+        install(XForwardedHeaderSupport)
+        install(HttpsRedirect)
     }
 
     val jedisPool = jedisPool(redisUrl)
@@ -58,10 +69,11 @@ fun main() {
     val port = System.getenv("PORT")?.toInt() ?: 8080
     val redisUrl = System.getenv("REDIS_URL")?.let(::URI)
         ?: throw RuntimeException("Please set the REDIS_URL environment variable")
+    val forceHttps = System.getenv("FORCE_HTTPS").toBoolean()
 
     embeddedServer(
         factory = Jetty,
         port = port,
-        module = { module(redisUrl) }
+        module = { module(redisUrl, forceHttps) }
     ).start()
 }

@@ -15,7 +15,7 @@ import kotlin.test.assertEquals
 @KtorExperimentalLocationsAPI
 class AppTest {
     @Test
-    fun testEmptyHome() = testApp {
+    fun testInfo() = testApp {
         handleRequest(HttpMethod.Get, "/info").apply {
             assertEquals(200, response.status()?.value)
 

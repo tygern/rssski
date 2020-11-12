@@ -12,6 +12,9 @@ import java.net.URI
 @KtorExperimentalLocationsAPI
 fun testApp(callback: TestApplicationEngine.() -> Unit) {
     withTestApplication({
-        module(redisUrl = URI("redis://127.0.0.1:6379"))
+        module(
+            redisUrl = URI("redis://127.0.0.1:6379"),
+            forceHttps = false
+        )
     }) { callback() }
 }
