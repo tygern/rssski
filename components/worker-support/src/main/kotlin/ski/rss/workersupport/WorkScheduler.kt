@@ -32,10 +32,13 @@ class WorkScheduler<T>(
         }
     }
 
-    private suspend fun findWork() =
+    private suspend fun findWork() {
+        logger.info("Finding work")
+
         finder.findRequested().forEach { work ->
             channel.send(work)
         }
+    }
 
     private fun CoroutineScope.listenForWork(worker: Worker<T>) =
         launch {

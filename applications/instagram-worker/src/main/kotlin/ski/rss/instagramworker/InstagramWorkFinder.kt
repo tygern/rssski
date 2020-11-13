@@ -1,16 +1,15 @@
 package ski.rss.instagramworker
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import redis.clients.jedis.JedisPool
 import ski.rss.workersupport.WorkFinder
 
-class InstagramWorkFinder : WorkFinder<String> {
-    companion object {
-        private val logger: Logger = LoggerFactory.getLogger(InstagramWorkFinder::class.java)
-    }
+class InstagramWorkFinder(private val jedisPool: JedisPool) : WorkFinder<String> {
+    private val instagramPrefix = "instagram:"
 
-    override fun findRequested(): List<String> {
-        logger.info("Finding work")
-        return listOf("accidentallywesanderson", "chelseafc")
-    }
+    override fun findRequested(): List<String> =
+        jedisPool.resource
+            .use { it.smembers("feeds") }
+            .filter { it.startsWith(instagramPrefix) }
+            .map { it.removePrefix(instagramPrefix) }
+            .toList()
 }

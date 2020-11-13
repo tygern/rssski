@@ -31,7 +31,7 @@ fun main() = runBlocking {
     )
 
     val scheduler = WorkScheduler(
-        finder = InstagramWorkFinder(),
+        finder = InstagramWorkFinder(jedisPool),
         workers = listOf(
             InstagramWorker("1", instagramResponseCache),
             InstagramWorker("2", instagramResponseCache)
