@@ -6,6 +6,6 @@ dependencies {
     implementation("redis.clients:jedis:$jedisVersion")
     implementation("io.ktor:ktor-client-core:${ktorVersion}")
 
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.0-M1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.1")
     testImplementation("io.ktor:ktor-client-mock:${ktorVersion}")
 }
