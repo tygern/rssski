@@ -6,6 +6,7 @@ include(
     "components:instagram-feed",
     "components:rss",
 
+    "components:functional-support",
     "components:redis-support",
     "components:worker-support"
 )

@@ -1,4 +1,4 @@
-package ski.rss.instagram
+package ski.rss.functionalsupport
 
 sealed class Result<A> {
     fun <B> map(mapping: (A) -> B): Result<B> =

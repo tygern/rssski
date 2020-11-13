@@ -10,6 +10,7 @@ subprojects kotlinConfig@{
     extra.apply {
         set("ktorVersion", "1.4.1")
 
+        set("kotlinCoroutinesVersion", "1.4.1")
         set("jedisVersion", "3.3.0")
         set("logbackVersion", "1.2.3")
     }

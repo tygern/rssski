@@ -3,6 +3,9 @@ package ski.rss.instagram
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.request.get
+import ski.rss.functionalsupport.Failure
+import ski.rss.functionalsupport.Result
+import ski.rss.functionalsupport.Success
 import java.net.URI
 
 class InstagramClient(

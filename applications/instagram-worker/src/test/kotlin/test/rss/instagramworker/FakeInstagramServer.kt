@@ -8,8 +8,11 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.jetty.Jetty
+import java.net.URI
 
 class FakeInstagramServer(port: Int) {
+    val url = URI("http://127.0.0.1:$port")
+
     private val server = embeddedServer(factory = Jetty, port = port) {
         routing {
             get("/finnsadventures") {
@@ -17,17 +20,7 @@ class FakeInstagramServer(port: Int) {
                     call.respond(HttpStatusCode.BadRequest)
                 }
 
-                call.respondText(javaClass.getResource("/finnsadventures.json").readText())
-            }
-            get("/givemejunk") {
-                if (call.parameters["__a"] != "1") {
-                    call.respond(HttpStatusCode.BadRequest)
-                }
-
-                call.respondText("<junk>")
-            }
-            get("/") {
-                call.respondText("fake instagram")
+                call.respondText("{\"some\": \"json\"}")
             }
         }
     }

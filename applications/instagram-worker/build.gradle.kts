@@ -3,13 +3,15 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val jedisVersion: String by extra
 val ktorVersion: String by extra
 val logbackVersion: String by extra
+val kotlinCoroutinesVersion: String by extra
 
 dependencies {
     implementation(project(":components:instagram"))
+    implementation(project(":components:functional-support"))
     implementation(project(":components:redis-support"))
     implementation(project(":components:worker-support"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("redis.clients:jedis:$jedisVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")

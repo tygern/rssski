@@ -1,5 +1,7 @@
 package ski.rss.instagram
 
+import ski.rss.functionalsupport.Result
+
 class InstagramResponseCache(
     private val instagramClient: InstagramClient,
     private val responseRepository: InstagramResponseRepository,

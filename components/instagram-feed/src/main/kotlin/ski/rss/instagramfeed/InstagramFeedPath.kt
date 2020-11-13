@@ -8,9 +8,9 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respondText
 import io.ktor.routing.Route
-import ski.rss.instagram.Failure
+import ski.rss.functionalsupport.Failure
 import ski.rss.instagram.InstagramProfileService
-import ski.rss.instagram.Success
+import ski.rss.functionalsupport.Success
 import ski.rss.rss.serialize
 
 @KtorExperimentalLocationsAPI

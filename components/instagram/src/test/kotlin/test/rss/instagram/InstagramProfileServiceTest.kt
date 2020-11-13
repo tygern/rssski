@@ -3,11 +3,11 @@ package test.rss.instagram
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import ski.rss.instagram.Failure
+import ski.rss.functionalsupport.Failure
 import ski.rss.instagram.InstagramJsonParser
 import ski.rss.instagram.InstagramProfileService
 import ski.rss.instagram.InstagramResponseRepository
-import ski.rss.instagram.Success
+import ski.rss.functionalsupport.Success
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

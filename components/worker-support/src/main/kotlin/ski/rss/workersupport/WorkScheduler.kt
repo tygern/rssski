@@ -5,13 +5,21 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import ski.rss.functionalsupport.Failure
+import ski.rss.functionalsupport.Success
 import kotlin.time.Duration
 
 class WorkScheduler<T>(
     private val finder: WorkFinder<T>,
     private val workers: List<Worker<T>>,
-    private val interval: Duration
+    private val interval: Duration,
 ) {
+    companion object {
+        private val logger: Logger = LoggerFactory.getLogger(WorkScheduler::class.java)
+    }
+
     private val channel = Channel<T>(Channel.UNLIMITED)
 
     suspend fun start() = coroutineScope {
@@ -32,7 +40,16 @@ class WorkScheduler<T>(
     private fun CoroutineScope.listenForWork(worker: Worker<T>) =
         launch {
             for (work in channel) {
-                worker.execute(work)
+                logger.info("Worker ${worker.name} is starting to work on $work")
+
+                try {
+                    when (worker.execute(work)) {
+                        is Success -> logger.info("Worker ${worker.name} successfully completed $work")
+                        is Failure -> logger.info("Worker ${worker.name} was unable to complete $work")
+                    }
+                } catch (e: Throwable) {
+                    logger.info("Worker ${worker.name} threw an exception for $work: $e")
+                }
             }
         }
 

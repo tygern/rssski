@@ -12,9 +12,9 @@ import io.ktor.http.headersOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
-import ski.rss.instagram.Failure
+import ski.rss.functionalsupport.Failure
 import ski.rss.instagram.InstagramClient
-import ski.rss.instagram.Success
+import ski.rss.functionalsupport.Success
 import java.net.URI
 import kotlin.test.assertEquals
 
