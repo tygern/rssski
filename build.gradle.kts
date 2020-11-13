@@ -1,14 +1,14 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.0" apply false
+    kotlin("jvm") version "1.4.10" apply false
 }
 
 subprojects kotlinConfig@{
     if (isNotKotlinProject()) return@kotlinConfig
 
     extra.apply {
-        set("ktorVersion", "1.4.1")
+        set("ktorVersion", "1.4.2")
 
         set("kotlinCoroutinesVersion", "1.4.1")
         set("jedisVersion", "3.3.0")
