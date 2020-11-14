@@ -8,6 +8,8 @@ dependencies {
     implementation(project(":components:instagram"))
     implementation(project(":components:instagram-rss"))
     implementation(project(":components:rss"))
+
+    implementation(project(":components:functional-support"))
     implementation(project(":components:redis-support"))
 
     implementation("io.ktor:ktor-server-jetty:$ktorVersion")
@@ -31,7 +33,10 @@ tasks {
         from({
             configurations.compileClasspath.get()
                 .filter { it.name.endsWith("jar") }
-                .map { zipTree(it) }
+                .map {
+                    println("jar: $it")
+                    zipTree(it)
+                }
         })
     }
 }
