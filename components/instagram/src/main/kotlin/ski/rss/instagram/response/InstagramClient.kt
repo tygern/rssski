@@ -1,4 +1,4 @@
-package ski.rss.instagram
+package ski.rss.instagram.response
 
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException

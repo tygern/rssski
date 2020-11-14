@@ -6,7 +6,6 @@ import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
-import io.ktor.features.ForwardedHeaderSupport
 import io.ktor.features.HttpsRedirect
 import io.ktor.features.XForwardedHeaderSupport
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -18,10 +17,11 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.jetty.Jetty
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.json.Json
-import ski.rss.instagram.InstagramJsonParser
-import ski.rss.instagram.InstagramProfileService
-import ski.rss.instagram.InstagramResponseRepository
-import ski.rss.instagramfeed.instagramFeed
+import ski.rss.instagram.profile.InstagramJsonParser
+import ski.rss.instagram.profile.InstagramProfileRepository
+import ski.rss.instagram.profile.InstagramProfileService
+import ski.rss.instagram.response.InstagramResponseRepository
+import ski.rss.instagramrss.instagramRss
 import ski.rss.redissupport.jedisPool
 import java.net.URI
 
@@ -50,14 +50,16 @@ fun Application.module(
 
     val instagramJsonParser = InstagramJsonParser()
     val instagramResponseRepository = InstagramResponseRepository(jedisPool)
+    val instagramProfileRepository = InstagramProfileRepository(jedisPool)
 
-    val instagramService = InstagramProfileService(
+    val instagramProfileService = InstagramProfileService(
         jsonParser = instagramJsonParser,
-        responseRepository = instagramResponseRepository
+        responseRepository = instagramResponseRepository,
+        profileRepository = instagramProfileRepository,
     )
 
     install(Routing) {
-        instagramFeed(instagramService)
+        instagramRss(instagramProfileService)
         info()
         staticContent()
     }

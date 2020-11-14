@@ -1,4 +1,4 @@
-package test.rss.instagram
+package test.rss.instagram.response
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -13,7 +13,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 import ski.rss.functionalsupport.Failure
-import ski.rss.instagram.InstagramClient
+import ski.rss.instagram.response.InstagramClient
 import ski.rss.functionalsupport.Success
 import java.net.URI
 import kotlin.test.assertEquals

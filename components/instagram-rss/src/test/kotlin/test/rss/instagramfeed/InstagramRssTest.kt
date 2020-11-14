@@ -1,8 +1,8 @@
 package test.rss.instagramfeed
 
-import ski.rss.instagram.InstagramPost
-import ski.rss.instagram.InstagramProfile
-import ski.rss.instagramfeed.rssFromProfile
+import ski.rss.instagram.profile.InstagramPost
+import ski.rss.instagram.profile.InstagramProfile
+import ski.rss.instagramrss.rssFromProfile
 import ski.rss.rss.Item
 import ski.rss.rss.Rss
 import java.net.URI

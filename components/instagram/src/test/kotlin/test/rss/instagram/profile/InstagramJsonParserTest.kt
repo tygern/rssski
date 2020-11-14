@@ -1,9 +1,9 @@
-package test.rss.instagram
+package test.rss.instagram.profile
 
 import ski.rss.functionalsupport.Failure
-import ski.rss.instagram.InstagramJsonParser
-import ski.rss.instagram.InstagramPost
-import ski.rss.instagram.InstagramProfile
+import ski.rss.instagram.profile.InstagramJsonParser
+import ski.rss.instagram.profile.InstagramPost
+import ski.rss.instagram.profile.InstagramProfile
 import ski.rss.functionalsupport.Success
 import java.net.URI
 import java.time.Instant

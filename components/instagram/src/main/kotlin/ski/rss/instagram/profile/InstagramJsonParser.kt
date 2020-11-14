@@ -1,4 +1,4 @@
-package ski.rss.instagram
+package ski.rss.instagram.profile
 
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString

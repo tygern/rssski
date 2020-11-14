@@ -6,7 +6,7 @@ val logbackVersion: String by extra
 
 dependencies {
     implementation(project(":components:instagram"))
-    implementation(project(":components:instagram-feed"))
+    implementation(project(":components:instagram-rss"))
     implementation(project(":components:rss"))
     implementation(project(":components:redis-support"))
 

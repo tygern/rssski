@@ -1,13 +1,12 @@
-package test.rss.instagram
+package test.rss.instagram.response
 
 import org.junit.Before
 import redis.clients.jedis.JedisPool
-import ski.rss.instagram.InstagramResponseRepository
+import ski.rss.instagram.response.InstagramResponseRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class InstagramResponseRepositoryTest {
-
     private val jedisPool = JedisPool()
     private val repo = InstagramResponseRepository(jedisPool)
 
@@ -27,18 +26,6 @@ class InstagramResponseRepositoryTest {
         }
 
         assertEquals("{\"some\": \"json\"}", savedValue)
-    }
-
-    @Test
-    fun testSaveNullTakesNoAction() {
-        repo.save("fred", "potato")
-        repo.save("fred", null)
-
-        val savedValue = jedisPool.resource.use {
-            it.get("instagram:fred")
-        }
-
-        assertEquals("potato", savedValue)
     }
 
     @Test

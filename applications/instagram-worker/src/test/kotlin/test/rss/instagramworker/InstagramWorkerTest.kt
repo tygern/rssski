@@ -8,9 +8,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import ski.rss.functionalsupport.Success
-import ski.rss.instagram.InstagramClient
-import ski.rss.instagram.InstagramResponseCache
-import ski.rss.instagram.InstagramResponseRepository
+import ski.rss.instagram.response.InstagramClient
+import ski.rss.instagram.response.InstagramResponseService
+import ski.rss.instagram.response.InstagramResponseRepository
 import ski.rss.instagramworker.InstagramWorker
 import ski.rss.redissupport.jedisPool
 import java.net.URI
@@ -29,7 +29,7 @@ class InstagramWorkerTest {
     )
     private val instagramResponseRepository = InstagramResponseRepository(jedisPool)
 
-    private val instagramResponseCache = InstagramResponseCache(
+    private val instagramResponseService = InstagramResponseService(
         instagramClient,
         instagramResponseRepository
     )
@@ -50,7 +50,7 @@ class InstagramWorkerTest {
 
     @Test
     fun integrationTest() = runBlocking {
-        val worker = InstagramWorker("test worker", instagramResponseCache)
+        val worker = InstagramWorker("test worker", instagramResponseService)
 
         val result = worker.execute("finnsadventures")
 

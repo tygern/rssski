@@ -1,15 +1,13 @@
-package ski.rss.instagram
+package ski.rss.instagram.response
 
 import redis.clients.jedis.JedisPool
 
 class InstagramResponseRepository(private val jedisPool: JedisPool) {
     private val prefix = "instagram"
 
-    fun save(name: String, response: String?) {
-        if (response != null) {
-            jedisPool.resource.use {
-                it.set("$prefix:$name", response)
-            }
+    fun save(name: String, response: String) {
+        jedisPool.resource.use {
+            it.set("$prefix:$name", response)
         }
     }
 

@@ -16,7 +16,7 @@ import kotlin.test.assertEquals
 
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
-class InstagramFeedTest {
+class InstagramReadRssTest {
     private val jedisPool = JedisPool()
 
     @BeforeTest

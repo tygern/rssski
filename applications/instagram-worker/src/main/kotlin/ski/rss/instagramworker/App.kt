@@ -4,9 +4,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
-import ski.rss.instagram.InstagramClient
-import ski.rss.instagram.InstagramResponseCache
-import ski.rss.instagram.InstagramResponseRepository
+import ski.rss.instagram.response.InstagramClient
+import ski.rss.instagram.response.InstagramResponseService
+import ski.rss.instagram.response.InstagramResponseRepository
 import ski.rss.redissupport.jedisPool
 import ski.rss.workersupport.WorkScheduler
 import java.net.URI
@@ -25,7 +25,7 @@ fun main() = runBlocking {
     val instagramClient = InstagramClient(instagramUrl, httpClient)
     val instagramResponseRepository = InstagramResponseRepository(jedisPool)
 
-    val instagramResponseCache = InstagramResponseCache(
+    val instagramResponseService = InstagramResponseService(
         instagramClient,
         instagramResponseRepository
     )
@@ -33,8 +33,8 @@ fun main() = runBlocking {
     val scheduler = WorkScheduler(
         finder = InstagramWorkFinder(jedisPool),
         workers = listOf(
-            InstagramWorker("1", instagramResponseCache),
-            InstagramWorker("2", instagramResponseCache)
+            InstagramWorker("1", instagramResponseService),
+            InstagramWorker("2", instagramResponseService)
         ),
         interval = 1.hours,
     )
