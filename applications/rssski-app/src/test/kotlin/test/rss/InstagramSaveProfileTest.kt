@@ -5,8 +5,8 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.handleRequest
 import io.ktor.util.KtorExperimentalAPI
-import org.junit.Before
 import redis.clients.jedis.JedisPool
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -15,7 +15,7 @@ import kotlin.test.assertEquals
 class InstagramSaveProfileTest {
     private val jedisPool = JedisPool()
 
-    @Before
+    @BeforeTest
     fun setUp() {
         jedisPool.resource.use {
             it.del("feeds")

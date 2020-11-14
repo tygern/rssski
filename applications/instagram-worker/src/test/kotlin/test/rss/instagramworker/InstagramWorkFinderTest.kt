@@ -1,10 +1,10 @@
 package test.rss.instagramworker
 
-import org.junit.Before
-import org.junit.Test
 import ski.rss.instagramworker.InstagramWorkFinder
 import ski.rss.redissupport.jedisPool
 import java.net.URI
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class InstagramWorkFinderTest {
@@ -13,7 +13,7 @@ class InstagramWorkFinderTest {
 
     private val workFinder = InstagramWorkFinder(jedisPool)
 
-    @Before
+    @BeforeTest
     fun setUp() {
         jedisPool.resource.use {
             it.del("feeds")

@@ -1,8 +1,8 @@
 package test.rss.instagram.response
 
-import org.junit.Before
 import redis.clients.jedis.JedisPool
 import ski.rss.instagram.response.InstagramResponseRepository
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -10,7 +10,7 @@ class InstagramResponseRepositoryTest {
     private val jedisPool = JedisPool()
     private val repo = InstagramResponseRepository(jedisPool)
 
-    @Before
+    @BeforeTest
     fun setUp() {
         jedisPool.resource.use {
             it.del("instagram:fred")

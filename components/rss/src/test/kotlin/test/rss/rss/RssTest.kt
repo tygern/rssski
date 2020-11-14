@@ -1,11 +1,11 @@
 package test.rss.rss
 
-import org.junit.Test
 import ski.rss.rss.Item
 import ski.rss.rss.Rss
 import ski.rss.rss.serialize
 import java.net.URI
 import java.time.Instant
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class RssTest {

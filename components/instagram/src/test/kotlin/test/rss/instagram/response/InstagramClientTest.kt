@@ -11,11 +11,11 @@ import io.ktor.http.fullPath
 import io.ktor.http.headersOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Test
 import ski.rss.functionalsupport.Failure
-import ski.rss.instagram.response.InstagramClient
 import ski.rss.functionalsupport.Success
+import ski.rss.instagram.response.InstagramClient
 import java.net.URI
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi

@@ -4,16 +4,16 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
 import ski.rss.functionalsupport.Success
 import ski.rss.instagram.response.InstagramClient
-import ski.rss.instagram.response.InstagramResponseService
 import ski.rss.instagram.response.InstagramResponseRepository
+import ski.rss.instagram.response.InstagramResponseService
 import ski.rss.instagramworker.InstagramWorker
 import ski.rss.redissupport.jedisPool
 import java.net.URI
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @KtorExperimentalAPI
@@ -34,7 +34,7 @@ class InstagramWorkerTest {
         instagramResponseRepository
     )
 
-    @Before
+    @BeforeTest
     fun setUp() {
         instagramServer.start()
 
@@ -43,7 +43,7 @@ class InstagramWorkerTest {
         }
     }
 
-    @After
+    @AfterTest
     fun tearDown() {
         instagramServer.stop()
     }
