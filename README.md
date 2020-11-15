@@ -18,26 +18,40 @@ requests from public clouds.
 The two application architecture allows me to deploy the web app to Heroku and the worker to a Raspberry Pi running on
 my home network.
 
-The worker fetches feed information from the social media servers and stores the full response in Redis.
+The worker fetches feed information from the social media servers and stores the full response in [Redis](https://redis.io).
 When a user requests an RSS feed from the web app, the app fetches the response from Redis and transforms the response
 into an RSS feed.
 
 ## Build and run
 
-1.  Build app and worker.
+1.  Run Redis.
+
+1.  Build the app and worker.
     ```bash
     ./gradlew clean build
     ```
 
-1.  Run worker.
+1.  Run the worker.
     ```bash
     INSTAGRAM_URL="https://www.instagram.com" REDIS_URL="redis://127.0.0.1:6379" java -jar applications/social-worker/build/libs/social-worker.jar
     ```
 
-1.  Run app.
+1.  Run the app.
     ```bash
     REDIS_URL="redis://127.0.0.1:6379" java -jar applications/rssski-app/build/libs/rssski-app.jar
     ```
+
+## Usage
+
+1.  Add an instagram feed for the worker to follow.
+
+    ```bash
+    curl -XPOST ${RSSSKI_APP_URL}/instagram/accidentallywesanderson
+    ```
+
+1.  Add the feed url (`${RSSSKI_APP_URL}/instagram/accidentallywesanderson`) to your favorite RSS reader.
+
+1.  The worker fetches social feeds every hour, so be patient while waiting for your feed to update. 
 
 ## Deploy
 
