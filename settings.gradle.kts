@@ -1,6 +1,6 @@
 include(
-    "applications:instagram-worker",
     "applications:rssski-app",
+    "applications:social-worker",
 
     "components:instagram",
     "components:instagram-rss",

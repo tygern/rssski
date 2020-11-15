@@ -1,7 +1,7 @@
-package test.rss.instagramworker
+package test.rss.socialworker.instagram
 
-import ski.rss.instagramworker.InstagramWorkFinder
 import ski.rss.redissupport.jedisPool
+import ski.rss.socialworker.instagram.InstagramWorkFinder
 import java.net.URI
 import kotlin.test.BeforeTest
 import kotlin.test.Test

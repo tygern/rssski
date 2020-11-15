@@ -1,4 +1,4 @@
-package ski.rss.instagramworker
+package ski.rss.socialworker.instagram
 
 import ski.rss.functionalsupport.Result
 import ski.rss.instagram.response.InstagramResponseService

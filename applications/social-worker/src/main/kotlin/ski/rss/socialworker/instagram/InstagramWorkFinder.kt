@@ -1,4 +1,4 @@
-package ski.rss.instagramworker
+package ski.rss.socialworker.instagram
 
 import redis.clients.jedis.JedisPool
 import ski.rss.workersupport.WorkFinder

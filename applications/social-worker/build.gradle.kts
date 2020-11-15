@@ -26,7 +26,7 @@ tasks.withType<KotlinCompile>().all {
 tasks {
     jar {
         manifest {
-            attributes("Main-Class" to "ski.rss.instagramworker.AppKt")
+            attributes("Main-Class" to "ski.rss.socialworker.AppKt")
         }
 
         from({

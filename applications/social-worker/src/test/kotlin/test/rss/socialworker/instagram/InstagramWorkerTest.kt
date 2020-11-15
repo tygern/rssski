@@ -1,4 +1,4 @@
-package test.rss.instagramworker
+package test.rss.socialworker.instagram
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -8,8 +8,8 @@ import ski.rss.functionalsupport.Success
 import ski.rss.instagram.response.InstagramClient
 import ski.rss.instagram.response.InstagramResponseRepository
 import ski.rss.instagram.response.InstagramResponseService
-import ski.rss.instagramworker.InstagramWorker
 import ski.rss.redissupport.jedisPool
+import ski.rss.socialworker.instagram.InstagramWorker
 import java.net.URI
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
