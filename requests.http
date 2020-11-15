@@ -1,0 +1,7 @@
+POST http://localhost:8080/instagram/accidentallywesanderson
+
+###
+GET http://localhost:8080/instagram/accidentallywesanderson
+Accept: application/rss+xml
+
+###
