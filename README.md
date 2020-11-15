@@ -65,7 +65,16 @@ into an RSS feed.
     heroku plugins:install java
     ```
 
-1.  Push the jar to Heroku.
+1.  Push the web app jar to Heroku.
     ```bash
     heroku deploy:jar applications/rssski-app/build/libs/rssski-app.jar --app rssski
     ```
+
+1.  Run the social worker jar somewhere that is able to access Instagram profiles.
+    I run it on a Raspberry Pi using _nohup_
+    
+    ```bash
+    INSTAGRAM_URL="https://www.instagram.com" REDIS_URL="${HEROKU_REDIS_URL}" nohup java -jar social-worker.jar > social-worker.jar &
+    ```
+    
+    but there's probably a better way to do it using systemd.
