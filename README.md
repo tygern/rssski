@@ -33,12 +33,16 @@ into an RSS feed.
 
 1.  Run the worker.
     ```bash
-    INSTAGRAM_URL="https://www.instagram.com" REDIS_URL="redis://127.0.0.1:6379" java -jar applications/social-worker/build/libs/social-worker.jar
+    INSTAGRAM_URL="https://www.instagram.com" \
+    REDIS_URL="redis://127.0.0.1:6379" \
+    UPDATE_INTERVAL="60" \
+    java -jar applications/social-worker/build/libs/social-worker.jar
     ```
 
 1.  Run the app.
     ```bash
-    REDIS_URL="redis://127.0.0.1:6379" java -jar applications/rssski-app/build/libs/rssski-app.jar
+    REDIS_URL="redis://127.0.0.1:6379" \
+    java -jar applications/rssski-app/build/libs/rssski-app.jar
     ```
 
 ## Usage
@@ -51,7 +55,7 @@ into an RSS feed.
 
 1.  Add the feed url (`${RSSSKI_APP_URL}/instagram/accidentallywesanderson`) to your favorite RSS reader.
 
-1.  The worker fetches social feeds every hour, so be patient while waiting for your feed to update. 
+1.  The worker fetches social feeds periodically, so be patient while waiting for your feed to update. 
 
 ## Deploy
 
@@ -74,7 +78,10 @@ into an RSS feed.
     I run it on a Raspberry Pi using _nohup_
     
     ```bash
-    INSTAGRAM_URL="https://www.instagram.com" REDIS_URL="${HEROKU_REDIS_URL}" nohup java -jar social-worker.jar > social-worker.jar &
+    INSTAGRAM_URL="https://www.instagram.com" \
+    REDIS_URL="${HEROKU_REDIS_URL}" \
+    UPDATE_INTERVAL="60" \
+    nohup java -jar social-worker.jar > social-worker.jar &
     ```
     
     but there's probably a better way to do it using systemd.

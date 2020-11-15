@@ -12,7 +12,7 @@ import ski.rss.socialworker.instagram.InstagramWorkFinder
 import ski.rss.socialworker.instagram.InstagramWorker
 import ski.rss.workersupport.WorkScheduler
 import java.net.URI
-import kotlin.time.hours
+import kotlin.time.minutes
 
 @KtorExperimentalAPI
 fun main() = runBlocking {
@@ -20,6 +20,8 @@ fun main() = runBlocking {
         ?: throw RuntimeException("Please set the INSTAGRAM_URL environment variable"))
     val redisUrl = System.getenv("REDIS_URL")?.let(::URI)
         ?: throw RuntimeException("Please set the REDIS_URL environment variable")
+    val updateInterval = System.getenv("UPDATE_INTERVAL").toIntOrNull()
+        ?: throw RuntimeException("Please set the UPDATE_INTERVAL environment variable to an integer value of minutes")
 
     val httpClient = HttpClient(CIO)
     val jedisPool = jedisPool(redisUrl)
@@ -38,7 +40,7 @@ fun main() = runBlocking {
             InstagramWorker("1", instagramResponseService),
             InstagramWorker("2", instagramResponseService)
         ),
-        interval = 1.hours,
+        interval = updateInterval.minutes,
     )
 
     scheduler.start()
