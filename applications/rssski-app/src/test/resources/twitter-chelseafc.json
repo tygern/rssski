@@ -1,0 +1,81 @@
+{
+  "data": [
+    {
+      "id": "1328381813690142722",
+      "text": "October's Goal of the Month: \n\n@TimoWerner v Southampton! 👌 https://t.co/iWg3Nc3YaC",
+      "author_id": "22910295",
+      "created_at": "2020-11-16T16:57:59.000Z"
+    },
+    {
+      "id": "1328306859476914177",
+      "text": "‘I’m working on a career of PGA Tour at the moment.’\n\n𝟵𝟬 𝘀𝗲𝗰𝗼𝗻𝗱𝘀 with @CPulisic_10 who talks all things gaming! 🎮 https://t.co/1RDQSpDodd",
+      "author_id": "22910295",
+      "created_at": "2020-11-16T12:00:08.000Z"
+    },
+    {
+      "id": "1328282960416681984",
+      "text": "A record-breaking outing at the old Wembley was one to remember! 🤩\n\nYou can relive the drama of that day in our brand new boxset, Cup Kings! 🏆",
+      "author_id": "22910295",
+      "created_at": "2020-11-16T10:25:10.000Z"
+    },
+    {
+      "id": "1328266398062284802",
+      "text": "Jorginho from the spot! 👌🇮🇹 https://t.co/co40xZ95ps",
+      "author_id": "22910295",
+      "created_at": "2020-11-16T09:19:21.000Z"
+    },
+    {
+      "id": "1328265791217815554",
+      "text": "A night of mixed fortunes for the Chelsea players on international duty...\n\nRead about it here! 👇",
+      "author_id": "22910295",
+      "created_at": "2020-11-16T09:16:57.000Z"
+    },
+    {
+      "id": "1328263247443730432",
+      "text": "The @PremierLeague is back this week!\n\n😃 #MondayMotivation https://t.co/YUAAZB3Z6o",
+      "author_id": "22910295",
+      "created_at": "2020-11-16T09:06:50.000Z"
+    },
+    {
+      "id": "1328058074083549188",
+      "text": "A place in the starting XI for @MasonMount_10 and @BenChilwell, while @TammyAbraham is named as a substitute!\n\nGood luck, lads! 🦁🦁🦁 https://t.co/tOYwbzgzCn",
+      "author_id": "22910295",
+      "created_at": "2020-11-15T19:31:33.000Z"
+    },
+    {
+      "id": "1328056988169801729",
+      "text": "Our last cup final win was one to savour! \n\n📲 Watch it all again in our new boxset on the 5th Stand app!",
+      "author_id": "22910295",
+      "created_at": "2020-11-15T19:27:14.000Z"
+    },
+    {
+      "id": "1328021068402061313",
+      "text": "What the stats say about our season so far! 📈",
+      "author_id": "22910295",
+      "created_at": "2020-11-15T17:04:30.000Z"
+    },
+    {
+      "id": "1328017449384636417",
+      "text": "RT @ChelseaFCW: Right at the death. @PernilleMHarder! 🙌\n\n#CFCW \n https://t.co/qVfKaJb85G",
+      "author_id": "22910295",
+      "created_at": "2020-11-15T16:50:07.000Z"
+    }
+  ],
+  "includes": {
+    "users": [
+      {
+        "username": "ChelseaFC",
+        "name": "Chelsea FC",
+        "description": "Welcome to the official Twitter account of Chelsea Football Club. Download our app, the 5th Stand! 📲",
+        "id": "22910295",
+        "profile_image_url": "https://pbs.twimg.com/profile_images/1326853447044509697/9DtwRsdK_normal.jpg"
+      }
+    ]
+  },
+  "meta": {
+    "newest_id": "1328381813690142722",
+    "oldest_id": "1328017449384636417",
+    "result_count": 10,
+    "next_token": "b26v89c19zqg8o3fosbvi26e3fkfq08go4m15hyxxckfx"
+  }
+}

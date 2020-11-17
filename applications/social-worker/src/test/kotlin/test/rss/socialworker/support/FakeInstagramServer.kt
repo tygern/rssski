@@ -1,4 +1,4 @@
-package test.rss.socialworker.instagram
+package test.rss.socialworker.support
 
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode

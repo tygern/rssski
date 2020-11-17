@@ -6,6 +6,7 @@ import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.handleRequest
 import io.ktor.util.KtorExperimentalAPI
 import redis.clients.jedis.JedisPool
+import ski.rss.instagram.response.instagramPrefix
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -32,6 +33,6 @@ class InstagramSaveProfileTest {
             it.smembers("feeds")
         }
 
-        assertEquals(setOf("instagram:finnsadventures"), feeds)
+        assertEquals(setOf("$instagramPrefix:finnsadventures"), feeds)
     }
 }

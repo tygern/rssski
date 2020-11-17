@@ -7,6 +7,8 @@ val kotlinCoroutinesVersion: String by extra
 
 dependencies {
     implementation(project(":components:instagram"))
+    implementation(project(":components:twitter"))
+
     implementation(project(":components:functional-support"))
     implementation(project(":components:redis-support"))
     implementation(project(":components:worker-support"))

@@ -9,6 +9,7 @@ import io.ktor.server.testing.contentType
 import io.ktor.server.testing.handleRequest
 import io.ktor.util.KtorExperimentalAPI
 import redis.clients.jedis.JedisPool
+import ski.rss.instagram.response.instagramPrefix
 import java.nio.charset.Charset
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -22,8 +23,8 @@ class InstagramReadRssTest {
     @BeforeTest
     fun setUp() {
         jedisPool.resource.use {
-            it.set("instagram:finnsadventures", javaClass.getResource("/finnsadventures.json").readText())
-            it.set("instagram:givemejunk", "<junk>")
+            it.set("$instagramPrefix:finnsadventures", javaClass.getResource("/instagram-finnsadventures.json").readText())
+            it.set("$instagramPrefix:givemejunk", "<junk>")
         }
     }
 

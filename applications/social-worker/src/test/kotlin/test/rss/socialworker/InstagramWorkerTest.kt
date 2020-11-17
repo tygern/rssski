@@ -1,4 +1,4 @@
-package test.rss.socialworker.instagram
+package test.rss.socialworker
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -8,13 +8,17 @@ import ski.rss.functionalsupport.Success
 import ski.rss.instagram.response.InstagramClient
 import ski.rss.instagram.response.InstagramResponseRepository
 import ski.rss.instagram.response.InstagramResponseService
+import ski.rss.instagram.response.instagramPrefix
 import ski.rss.redissupport.jedisPool
-import ski.rss.socialworker.instagram.InstagramWorker
+import ski.rss.socialworker.InstagramWorker
+import test.rss.socialworker.support.FakeInstagramServer
 import java.net.URI
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @KtorExperimentalAPI
 class InstagramWorkerTest {
@@ -34,12 +38,14 @@ class InstagramWorkerTest {
         instagramResponseRepository
     )
 
+    private val worker = InstagramWorker("test worker", instagramResponseService)
+
     @BeforeTest
     fun setUp() {
         instagramServer.start()
 
         jedisPool.resource.use {
-            it.del("instagram:finnsadventures")
+            it.del("$instagramPrefix:finnsadventures")
         }
     }
 
@@ -50,16 +56,20 @@ class InstagramWorkerTest {
 
     @Test
     fun integrationTest() = runBlocking {
-        val worker = InstagramWorker("test worker", instagramResponseService)
-
-        val result = worker.execute("finnsadventures")
+        val result = worker.execute("$instagramPrefix:finnsadventures")
 
         assert(result is Success)
 
         val storedResponse = jedisPool.resource.use {
-            it.get("instagram:finnsadventures")
+            it.get("$instagramPrefix:finnsadventures")
         }
 
         assertEquals("{\"some\": \"json\"}", storedResponse)
+    }
+
+    @Test
+    fun canExecute() {
+        assertTrue(worker.canExecute("$instagramPrefix:finnsadventures"))
+        assertFalse(worker.canExecute("facebook:finnsadventures"))
     }
 }

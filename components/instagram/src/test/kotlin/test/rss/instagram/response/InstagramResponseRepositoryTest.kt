@@ -2,6 +2,7 @@ package test.rss.instagram.response
 
 import redis.clients.jedis.JedisPool
 import ski.rss.instagram.response.InstagramResponseRepository
+import ski.rss.instagram.response.instagramPrefix
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -13,7 +14,7 @@ class InstagramResponseRepositoryTest {
     @BeforeTest
     fun setUp() {
         jedisPool.resource.use {
-            it.del("instagram:fred")
+            it.del("$instagramPrefix:fred")
         }
     }
 
@@ -22,7 +23,7 @@ class InstagramResponseRepositoryTest {
         repo.save("fred", "{\"some\": \"json\"}")
 
         val savedValue = jedisPool.resource.use {
-            it.get("instagram:fred")
+            it.get("$instagramPrefix:fred")
         }
 
         assertEquals("{\"some\": \"json\"}", savedValue)
@@ -30,7 +31,7 @@ class InstagramResponseRepositoryTest {
 
     @Test
     fun testFetch() {
-        jedisPool.resource.use { it.set("instagram:fred", "{\"a\": \"value\"}") }
+        jedisPool.resource.use { it.set("$instagramPrefix:fred", "{\"a\": \"value\"}") }
 
         val result = repo.fetch("fred")
 

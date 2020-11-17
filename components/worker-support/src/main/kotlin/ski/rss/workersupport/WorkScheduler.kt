@@ -36,6 +36,7 @@ class WorkScheduler<T>(
         logger.info("Finding work")
 
         finder.findRequested().forEach { work ->
+            logger.info("Found work: $work")
             channel.send(work)
         }
     }
@@ -43,15 +44,19 @@ class WorkScheduler<T>(
     private fun CoroutineScope.listenForWork(worker: Worker<T>) =
         launch {
             for (work in channel) {
-                logger.info("Worker ${worker.name} is starting to work on $work")
+                if (worker.canExecute(work)) {
+                    logger.info("Worker ${worker.name} is starting to work on $work")
 
-                try {
-                    when (worker.execute(work)) {
-                        is Success -> logger.info("Worker ${worker.name} successfully completed $work")
-                        is Failure -> logger.info("Worker ${worker.name} was unable to complete $work")
+                    try {
+                        when (worker.execute(work)) {
+                            is Success -> logger.info("Worker ${worker.name} successfully completed $work")
+                            is Failure -> logger.info("Worker ${worker.name} was unable to complete $work")
+                        }
+                    } catch (e: Throwable) {
+                        logger.info("Worker ${worker.name} threw an exception for $work: $e")
                     }
-                } catch (e: Throwable) {
-                    logger.info("Worker ${worker.name} threw an exception for $work: $e")
+                } else {
+                    channel.send(work)
                 }
             }
         }

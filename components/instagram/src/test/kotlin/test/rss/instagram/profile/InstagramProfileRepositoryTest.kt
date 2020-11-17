@@ -2,6 +2,7 @@ package test.rss.instagram.profile
 
 import redis.clients.jedis.JedisPool
 import ski.rss.instagram.profile.InstagramProfileRepository
+import ski.rss.instagram.response.instagramPrefix
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,6 +26,6 @@ class InstagramProfileRepositoryTest {
             it.smembers("feeds")
         }
 
-        assertEquals(setOf("instagram:accidentallywesanderson"), savedFeed)
+        assertEquals(setOf("$instagramPrefix:accidentallywesanderson"), savedFeed)
     }
 }
