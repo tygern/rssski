@@ -34,7 +34,6 @@ tasks {
             configurations.compileClasspath.get()
                 .filter { it.name.endsWith("jar") }
                 .map {
-                    println("jar: $it")
                     zipTree(it)
                 }
         })

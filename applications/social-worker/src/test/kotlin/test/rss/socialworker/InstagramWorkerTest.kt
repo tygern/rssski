@@ -10,7 +10,9 @@ import ski.rss.instagram.response.InstagramResponseRepository
 import ski.rss.instagram.response.InstagramResponseService
 import ski.rss.instagram.response.instagramPrefix
 import ski.rss.redissupport.jedisPool
+import ski.rss.socialworker.InstagramAccount
 import ski.rss.socialworker.InstagramWorker
+import ski.rss.socialworker.TwitterAccount
 import test.rss.socialworker.support.FakeInstagramServer
 import java.net.URI
 import kotlin.test.AfterTest
@@ -56,7 +58,7 @@ class InstagramWorkerTest {
 
     @Test
     fun integrationTest() = runBlocking {
-        val result = worker.execute("$instagramPrefix:finnsadventures")
+        val result = worker.execute(InstagramAccount("finnsadventures"))
 
         assert(result is Success)
 
@@ -69,7 +71,7 @@ class InstagramWorkerTest {
 
     @Test
     fun canExecute() {
-        assertTrue(worker.canExecute("$instagramPrefix:finnsadventures"))
-        assertFalse(worker.canExecute("facebook:finnsadventures"))
+        assertTrue(worker.canExecute(InstagramAccount("finnsadventures")))
+        assertFalse(worker.canExecute(TwitterAccount("finnsadventures")))
     }
 }

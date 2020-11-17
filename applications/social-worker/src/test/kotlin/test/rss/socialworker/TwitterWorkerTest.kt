@@ -6,6 +6,8 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
 import ski.rss.functionalsupport.Failure
 import ski.rss.redissupport.jedisPool
+import ski.rss.socialworker.InstagramAccount
+import ski.rss.socialworker.TwitterAccount
 import ski.rss.socialworker.TwitterWorker
 import ski.rss.twitter.response.TwitterClient
 import ski.rss.twitter.response.TwitterResponseRepository
@@ -59,7 +61,7 @@ class TwitterWorkerTest {
     @Test
     fun integrationTest() = runBlocking {
 
-        val result = worker.execute("chelseafc")
+        val result = worker.execute(TwitterAccount("chelseafc"))
 
         if (result is Failure) {
             fail(result.reason)
@@ -74,7 +76,7 @@ class TwitterWorkerTest {
 
     @Test
     fun canExecute() {
-        assertTrue(worker.canExecute("$twitterPrefix:finnsadventures"))
-        assertFalse(worker.canExecute("facebook:finnsadventures"))
+        assertTrue(worker.canExecute(TwitterAccount("finnsadventures")))
+        assertFalse(worker.canExecute(InstagramAccount("finnsadventures")))
     }
 }
