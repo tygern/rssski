@@ -28,7 +28,7 @@ class TwitterClient(
                 encodedPath = "/2/tweets/search/recent"
 
                 parameters.apply {
-                    append("query", "from:chelseafc")
+                    append("query", "from:$name")
                     append("max_results", "60")
                     append("expansions", "author_id")
                     append("user.fields", "name,description,profile_image_url")
