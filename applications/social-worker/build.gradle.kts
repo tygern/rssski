@@ -27,6 +27,8 @@ tasks.withType<KotlinCompile>().all {
 
 tasks {
     jar {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
         manifest {
             attributes("Main-Class" to "ski.rss.socialworker.AppKt")
         }
