@@ -17,12 +17,18 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.jetty.Jetty
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.json.Json
+import redis.clients.jedis.JedisPool
 import ski.rss.instagram.profile.InstagramJsonParser
 import ski.rss.instagram.profile.InstagramProfileRepository
 import ski.rss.instagram.profile.InstagramProfileService
 import ski.rss.instagram.response.InstagramResponseRepository
 import ski.rss.instagramrss.instagramRss
 import ski.rss.redissupport.jedisPool
+import ski.rss.twitter.profile.TwitterJsonParser
+import ski.rss.twitter.profile.TwitterProfileRepository
+import ski.rss.twitter.profile.TwitterProfileService
+import ski.rss.twitter.response.TwitterResponseRepository
+import ski.rss.twitterrss.twitterRss
 import java.net.URI
 
 @KtorExperimentalAPI
@@ -48,18 +54,12 @@ fun Application.module(
 
     val jedisPool = jedisPool(redisUrl)
 
-    val instagramJsonParser = InstagramJsonParser()
-    val instagramResponseRepository = InstagramResponseRepository(jedisPool)
-    val instagramProfileRepository = InstagramProfileRepository(jedisPool)
-
-    val instagramProfileService = InstagramProfileService(
-        jsonParser = instagramJsonParser,
-        responseRepository = instagramResponseRepository,
-        profileRepository = instagramProfileRepository,
-    )
+    val instagramProfileService = instagramProfileService(jedisPool)
+    val twitterProfileService = twitterProfileService(jedisPool)
 
     install(Routing) {
         instagramRss(instagramProfileService)
+        twitterRss(twitterProfileService)
         info()
         staticContent()
     }
@@ -78,4 +78,28 @@ fun main() {
         port = port,
         module = { module(redisUrl, forceHttps) }
     ).start()
+}
+
+private fun twitterProfileService(jedisPool: JedisPool): TwitterProfileService {
+    val twitterJsonParser = TwitterJsonParser()
+    val twitterResponseRepository = TwitterResponseRepository(jedisPool)
+    val twitterProfileRepository = TwitterProfileRepository(jedisPool)
+
+    return TwitterProfileService(
+        jsonParser = twitterJsonParser,
+        responseRepository = twitterResponseRepository,
+        profileRepository = twitterProfileRepository,
+    )
+}
+
+private fun instagramProfileService(jedisPool: JedisPool): InstagramProfileService {
+    val instagramJsonParser = InstagramJsonParser()
+    val instagramResponseRepository = InstagramResponseRepository(jedisPool)
+    val instagramProfileRepository = InstagramProfileRepository(jedisPool)
+
+    return InstagramProfileService(
+        jsonParser = instagramJsonParser,
+        responseRepository = instagramResponseRepository,
+        profileRepository = instagramProfileRepository,
+    )
 }

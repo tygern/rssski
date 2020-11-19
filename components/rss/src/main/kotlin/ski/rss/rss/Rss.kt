@@ -16,11 +16,16 @@ data class Rss(
 data class Item(
     val title: String,
     val description: String,
-    val imageUrl: URI,
+    val imageUrls: List<URI>,
     val url: URI,
     val author: String,
     val pubDate: Instant,
+    val imagesPosition: ImagePosition
 )
+
+enum class ImagePosition {
+    TOP, BOTTOM
+}
 
 fun Rss.serialize(): String {
     val builder = StringBuilder("""
@@ -58,9 +63,7 @@ private fun Item.serialize(): String {
                 |<title>${title.escape()}</title>
                 |<link>${url.escape()}</link>
                 |<description>
-                    |${xmlEscape("<img src=\"$imageUrl\"/><br><br>")}
-                    |
-                    |${description.escape().replace("\n", xmlEscape("<br>"))}
+                |${buildDescription()}
                 |</description>
                 |<author>${author.escape()}</author>
                 |<guid>${url.escape()}</guid>
@@ -68,6 +71,28 @@ private fun Item.serialize(): String {
             |</item>
             |
         """.trimMargin()
+}
+
+private fun Item.buildDescription(): String {
+
+    return when(imagesPosition) {
+        ImagePosition.BOTTOM -> {
+            """<![CDATA[
+                |${description.escape().replace("\n", "<br>")}
+                |<br>
+                |${imageUrls.joinToString("\n") { "<br><img src=\"$it\"/>" }}
+                |]]>
+        """.trimMargin()
+        }
+        ImagePosition.TOP -> {
+            """<![CDATA[
+                |${imageUrls.joinToString("\n") { "<img src=\"$it\"/><br>" }}
+                |<br>
+                |${description.escape().replace("\n", "<br>")}
+                |]]>
+        """.trimMargin()
+        }
+    }
 }
 
 private fun xmlEscape(string: String) = "<![CDATA[$string]]>"

@@ -30,9 +30,10 @@ class TwitterClient(
                 parameters.apply {
                     append("query", "from:$name")
                     append("max_results", "60")
-                    append("expansions", "author_id")
+                    append("expansions", "author_id,attachments.media_keys")
                     append("user.fields", "name,description,profile_image_url")
-                    append("tweet.fields", "created_at")
+                    append("tweet.fields", "created_at,attachments")
+                    append("media.fields", "preview_image_url,url")
                 }
             }
 

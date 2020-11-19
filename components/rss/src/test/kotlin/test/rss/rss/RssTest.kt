@@ -1,5 +1,6 @@
 package test.rss.rss
 
+import ski.rss.rss.ImagePosition
 import ski.rss.rss.Item
 import ski.rss.rss.Rss
 import ski.rss.rss.serialize
@@ -7,6 +8,7 @@ import java.net.URI
 import java.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class RssTest {
     @Test
@@ -21,17 +23,22 @@ class RssTest {
                     title = "Seeds 101",
                     url = URI("https://cfb.example.com/seeds.html"),
                     description = "Seed basics\nAll about hulls",
-                    imageUrl = URI("https://images.example.com/seeds.jpg"),
+                    imageUrls = listOf(
+                        URI("https://images.example.com/seeds.jpg"),
+                        URI("https://images.example.com/millet.jpg"),
+                    ),
                     author = "Christopher Wren",
-                    pubDate = Instant.ofEpochSecond(1605101774)
+                    pubDate = Instant.ofEpochSecond(1605101774),
+                    imagesPosition = ImagePosition.TOP,
                 ),
                 Item(
                     title = "Millet 304",
                     url = URI("https://cfb.example.com/millet.html"),
                     description = "Get your beak around millet",
-                    imageUrl = URI("https://images.example.com/millet.jpg"),
+                    imageUrls = listOf(),
                     author = "Florence Nightingale",
-                    pubDate = Instant.ofEpochSecond(1603101774)
+                    pubDate = Instant.ofEpochSecond(1603101774),
+                    imagesPosition = ImagePosition.TOP,
                 ),
             ),
         )
@@ -54,9 +61,12 @@ class RssTest {
                         |<title>Seeds 101</title>
                         |<link>https://cfb.example.com/seeds.html</link>
                         |<description>
-                            |<![CDATA[<img src="https://images.example.com/seeds.jpg"/><br><br>]]>
-                            |
-                            |Seed basics<![CDATA[<br>]]>All about hulls
+                            |<![CDATA[
+                            |<img src="https://images.example.com/seeds.jpg"/><br>
+                            |<img src="https://images.example.com/millet.jpg"/><br>
+                            |<br>
+                            |Seed basics<br>All about hulls
+                            |]]>
                         |</description>
                         |<author>Christopher Wren</author>
                         |<guid>https://cfb.example.com/seeds.html</guid>
@@ -66,9 +76,11 @@ class RssTest {
                         |<title>Millet 304</title>
                         |<link>https://cfb.example.com/millet.html</link>
                         |<description>
-                            |<![CDATA[<img src="https://images.example.com/millet.jpg"/><br><br>]]>
+                            |<![CDATA[
                             |
+                            |<br>
                             |Get your beak around millet
+                            |]]>
                         |</description>
                         |<author>Florence Nightingale</author>
                         |<guid>https://cfb.example.com/millet.html</guid>
@@ -79,6 +91,39 @@ class RssTest {
             """.trimMargin()
 
         assertEquals(expectedXml, xml)
+    }
+
+    @Test
+    fun testSerializeBottomImages() {
+        val rss = Rss(
+            title = "Cooking for birds",
+            url = URI("https://cfb.example.com"),
+            description = "It is for the birds",
+            imageUrl = URI("https://cfb.example.com/bird.jpg"),
+            items = listOf(
+                Item(
+                    title = "Seeds 101",
+                    url = URI("https://cfb.example.com/seeds.html"),
+                    description = "Seed basics\nAll about hulls",
+                    imageUrls = listOf(
+                        URI("https://images.example.com/millet.jpg"),
+                    ),
+                    author = "Christopher Wren",
+                    pubDate = Instant.ofEpochSecond(1605101774),
+                    imagesPosition = ImagePosition.BOTTOM,
+                )
+            ),
+        )
+
+        val xml = rss.serialize()
+
+        assertTrue(xml.contains("""
+            |<![CDATA[
+            |Seed basics<br>All about hulls
+            |<br>
+            |<br><img src="https://images.example.com/millet.jpg"/>
+            |]]>
+        """.trimMargin()))
     }
 
     @Test

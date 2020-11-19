@@ -1,23 +1,23 @@
 package test.rss.instagram.profile
 
 import ski.rss.functionalsupport.Failure
+import ski.rss.functionalsupport.Success
 import ski.rss.instagram.profile.InstagramJsonParser
 import ski.rss.instagram.profile.InstagramPost
 import ski.rss.instagram.profile.InstagramProfile
-import ski.rss.functionalsupport.Success
 import java.net.URI
 import java.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class InstagramJsonParserTest {
-    private val deserializer = InstagramJsonParser()
+    private val parser = InstagramJsonParser()
 
     @Test
     fun readProfile() {
         val profileJson = javaClass.getResource("/finnsadventures.json").readText()
 
-        val result = deserializer.readProfile(profileJson)
+        val result = parser.readProfile(profileJson)
 
         val expectedResult = InstagramProfile(
             name = "finnsadventures",
@@ -47,7 +47,7 @@ class InstagramJsonParserTest {
 
     @Test
     fun invalidJson() {
-        val result = deserializer.readProfile("<not-json>")
+        val result = parser.readProfile("<not-json>")
 
         require(result is Failure)
         assertEquals("Failed to parse JSON from Instagram response.", result.reason)
@@ -55,7 +55,7 @@ class InstagramJsonParserTest {
 
     @Test
     fun jsonWithMissingProperties() {
-        val result = deserializer.readProfile("{}")
+        val result = parser.readProfile("{}")
 
         require(result is Failure)
         assertEquals("Failed to parse JSON from Instagram response.", result.reason)

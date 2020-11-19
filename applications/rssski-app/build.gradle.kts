@@ -8,6 +8,8 @@ dependencies {
     implementation(project(":components:instagram"))
     implementation(project(":components:instagram-rss"))
     implementation(project(":components:rss"))
+    implementation(project(":components:twitter"))
+    implementation(project(":components:twitter-rss"))
 
     implementation(project(":components:functional-support"))
     implementation(project(":components:redis-support"))

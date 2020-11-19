@@ -40,7 +40,7 @@ class TwitterClientTest {
         val result = client.fetchProfile("noprofilehere")
 
         require(result is Failure)
-        assertEquals("Failed to fetch Twitter profile noprofilehere: Client request(http://twitter.example.com/2/tweets/search/recent?query=from%3Anoprofilehere&max_results=60&expansions=author_id&user.fields=name%2Cdescription%2Cprofile_image_url&tweet.fields=created_at) " +
+        assertEquals("Failed to fetch Twitter profile noprofilehere: Client request(http://twitter.example.com/2/tweets/search/recent?query=from%3Anoprofilehere&max_results=60&expansions=author_id%2Cattachments.media_keys&user.fields=name%2Cdescription%2Cprofile_image_url&tweet.fields=created_at%2Cattachments&media.fields=preview_image_url%2Curl) " +
             "invalid: 400 Bad Request", result.reason)
     }
 }
@@ -51,7 +51,7 @@ private val fakeHttpClient = HttpClient(MockEngine) {
     engine {
         addHandler { request ->
             when (request.method to request.url.location()) {
-                Get to "http://twitter.example.com/2/tweets/search/recent?query=from%3Afinnsadventures&max_results=60&expansions=author_id&user.fields=name%2Cdescription%2Cprofile_image_url&tweet.fields=created_at" -> {
+                Get to "http://twitter.example.com/2/tweets/search/recent?query=from%3Afinnsadventures&max_results=60&expansions=author_id%2Cattachments.media_keys&user.fields=name%2Cdescription%2Cprofile_image_url&tweet.fields=created_at%2Cattachments&media.fields=preview_image_url%2Curl" -> {
                     if (request.headers["Authorization"] != "Bearer some-token") {
                         fail("Incorrect authorization")
                     }
@@ -59,7 +59,7 @@ private val fakeHttpClient = HttpClient(MockEngine) {
                     val responseHeaders = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
                     respond("a response", headers = responseHeaders)
                 }
-                Get to "http://twitter.example.com/2/tweets/search/recent?query=from%3Anoprofilehere&max_results=60&expansions=author_id&user.fields=name%2Cdescription%2Cprofile_image_url&tweet.fields=created_at" -> {
+                Get to "http://twitter.example.com/2/tweets/search/recent?query=from%3Anoprofilehere&max_results=60&expansions=author_id%2Cattachments.media_keys&user.fields=name%2Cdescription%2Cprofile_image_url&tweet.fields=created_at%2Cattachments&media.fields=preview_image_url%2Curl" -> {
                     if (request.headers["Authorization"] != "Bearer some-token") {
                         fail("Incorrect authorization")
                     }

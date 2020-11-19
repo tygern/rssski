@@ -49,9 +49,11 @@ class InstagramReadRssTest {
                             |<title>Asbury Park Convention Hall</title>
                             |<link>https://www.instagram.com/p/Bx7b96cHeVs</link>
                             |<description>
-                                |<![CDATA[<img src="https://instagram.example.com/display.jpg"/><br><br>]]>
-                                |
+                                |<![CDATA[
+                                |<img src="https://instagram.example.com/display.jpg"/><br>
+                                |<br>
                                 |Asbury Park Convention Hall description
+                                |]]>
                             |</description>
                             |<author>finnsadventures</author>
                             |<guid>https://www.instagram.com/p/Bx7b96cHeVs</guid>

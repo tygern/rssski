@@ -21,9 +21,10 @@ class FakeTwitterServer(port: Int) {
                 if (
                     call.parameters["query"] != "from:chelseafc"
                     || call.parameters["max_results"] != "60"
-                    || call.parameters["expansions"] != "author_id"
+                    || call.parameters["expansions"] != "author_id,attachments.media_keys"
                     || call.parameters["user.fields"] != "name,description,profile_image_url"
-                    || call.parameters["tweet.fields"] != "created_at"
+                    || call.parameters["tweet.fields"] != "created_at,attachments"
+                    || call.parameters["media.fields"] != "preview_image_url,url"
                 ) {
                     call.respond(HttpStatusCode.BadRequest, "You're missing some query parameters or the auth ")
                 }

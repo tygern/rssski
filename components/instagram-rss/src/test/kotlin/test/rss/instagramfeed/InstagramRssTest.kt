@@ -3,6 +3,7 @@ package test.rss.instagramfeed
 import ski.rss.instagram.profile.InstagramPost
 import ski.rss.instagram.profile.InstagramProfile
 import ski.rss.instagramrss.rssFromProfile
+import ski.rss.rss.ImagePosition
 import ski.rss.rss.Item
 import ski.rss.rss.Rss
 import java.net.URI
@@ -12,7 +13,7 @@ import kotlin.test.assertEquals
 
 class InstagramRssTest {
     @Test
-    fun writesFeed() {
+    fun testRssFromProfile() {
         val profile = InstagramProfile(
             name = "sheep",
             description = "I like sheep",
@@ -48,18 +49,20 @@ class InstagramRssTest {
                     Item(
                         title = "Grazing",
                         description = "Grazing is fun",
-                        imageUrl = URI("http://example.com/hq_photo_of_sheep"),
+                        imageUrls = listOf(URI("http://example.com/hq_photo_of_sheep")),
                         url = URI("http://instagram.example.com/p/GRAZE"),
                         author = "sheep",
                         pubDate = Instant.ofEpochSecond(1605101774),
+                        imagesPosition = ImagePosition.TOP,
                     ),
                     Item(
                         title = "Baaaing",
                         description = "Baaaing is fun",
-                        imageUrl = URI("http://example.com/hq_photo_of_sheep"),
+                        imageUrls = listOf(URI("http://example.com/hq_photo_of_sheep")),
                         url = URI("http://instagram.example.com/p/BAAA"),
                         author = "sheep",
                         pubDate = Instant.ofEpochSecond(1603101774),
+                        imagesPosition = ImagePosition.TOP,
                     ),
                 ),
             ),

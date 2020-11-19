@@ -2,6 +2,7 @@ package ski.rss.instagramrss
 
 import ski.rss.instagram.profile.InstagramPost
 import ski.rss.instagram.profile.InstagramProfile
+import ski.rss.rss.ImagePosition
 import ski.rss.rss.Item
 import ski.rss.rss.Rss
 
@@ -18,8 +19,9 @@ fun rssFromProfile(profile: InstagramProfile) = Rss(
 private fun itemFromPost(post: InstagramPost, profile: InstagramProfile) = Item(
     title = post.title,
     description = post.description,
-    imageUrl = post.imageUrl,
+    imageUrls = listOf(post.imageUrl),
     url = post.link,
     author = profile.name,
-    pubDate = post.takenAt
+    pubDate = post.takenAt,
+    imagesPosition = ImagePosition.TOP,
 )
