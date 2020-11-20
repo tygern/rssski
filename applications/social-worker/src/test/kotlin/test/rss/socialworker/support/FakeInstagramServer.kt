@@ -1,6 +1,7 @@
 package test.rss.socialworker.support
 
 import io.ktor.application.call
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.response.respondText
@@ -20,7 +21,7 @@ class FakeInstagramServer(port: Int) {
                     call.respond(HttpStatusCode.BadRequest)
                 }
 
-                call.respondText("{\"some\": \"json\"}")
+                call.respondText("{\"some\": \"json\"}", ContentType.Application.Json)
             }
         }
     }

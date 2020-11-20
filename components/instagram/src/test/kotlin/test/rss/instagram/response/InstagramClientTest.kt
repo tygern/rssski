@@ -34,6 +34,14 @@ class InstagramClientTest {
     }
 
     @Test
+    fun testFetchProfileNotJson() = runBlockingTest {
+        val result = client.fetchProfile("notjson")
+
+        require(result is Failure)
+        assertEquals("Failed to fetch Instagram profile notjson: Instagram did not return JSON, which probably means it want you to authenticate", result.reason)
+    }
+
+    @Test
     fun testFetchProfileFailure() = runBlockingTest {
         val result = client.fetchProfile("noprofilehere")
 
@@ -50,6 +58,10 @@ private val fakeHttpClient = HttpClient(MockEngine) {
             when (request.method to request.url.location()) {
                 Get to "http://instagram.example.com/finnsadventures?__a=1" -> {
                     val responseHeaders = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
+                    respond("a response", headers = responseHeaders)
+                }
+                Get to "http://instagram.example.com/notjson?__a=1" -> {
+                    val responseHeaders = headersOf("Content-Type" to listOf(ContentType.Text.Html.toString()))
                     respond("a response", headers = responseHeaders)
                 }
                 Get to "http://instagram.example.com/noprofilehere?__a=1" -> {
