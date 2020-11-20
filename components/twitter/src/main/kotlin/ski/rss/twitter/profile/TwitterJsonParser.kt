@@ -26,7 +26,7 @@ class TwitterJsonParser {
         val profile = profileJson(json)
         val media = mediaJson(json)
 
-        return if (tweets == null || profile == null || media == null) {
+        return if (tweets == null || profile == null) {
             logger.error("""
                 Failed to parse json response:
                 
@@ -98,11 +98,10 @@ class TwitterJsonParser {
         null
     }
 
-    private fun mediaJson(json: String): JsonArray? = try {
-        Json.decodeFromString<JsonObject>(json)["includes"]?.jsonObject?.get("media")?.jsonArray
+    private fun mediaJson(json: String): JsonArray = try {
+        Json.decodeFromString<JsonObject>(json)["includes"]?.jsonObject?.get("media")?.jsonArray ?: JsonArray(emptyList())
     } catch (e: SerializationException) {
-        logger.error("JSON parse error {}", e.message)
-        null
+        JsonArray(emptyList())
     }
 }
 

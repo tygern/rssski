@@ -1,0 +1,26 @@
+{
+  "data": [
+    {
+      "id": "1328248207466504192",
+      "text": "Evolution is so creative. That's how we got giraffes.",
+      "author_id": "37350044",
+      "created_at": "2020-11-16T08:07:04.000Z"
+    }
+  ],
+  "includes": {
+    "users": [
+      {
+        "username": "Kurt_Vonnegut",
+        "name": "Kurt Vonnegut",
+        "description": "",
+        "id": "37350044",
+        "profile_image_url": "https://pbs.twimg.com/profile_images/193924187/Vonnegut_normal.jpg"
+      }
+    ]
+  },
+  "meta": {
+    "newest_id": "1329516566027890688",
+    "oldest_id": "1327161043664199680",
+    "result_count": 14
+  }
+}

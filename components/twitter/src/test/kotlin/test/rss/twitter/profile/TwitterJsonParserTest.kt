@@ -57,6 +57,32 @@ class TwitterJsonParserTest {
     }
 
     @Test
+    fun readProfileMinimal() {
+        val profileJson = javaClass.getResource("/twitter-minimal.json").readText()
+
+        val result = parser.readProfile(profileJson)
+
+        val expectedResult = TwitterProfile(
+            name = "Kurt Vonnegut",
+            username = "@Kurt_Vonnegut",
+            description = "",
+            link = URI("https://www.twitter.com/Kurt_Vonnegut"),
+            imageUrl = URI("https://pbs.twimg.com/profile_images/193924187/Vonnegut_normal.jpg"),
+            tweets = listOf(
+                Tweet(
+                description = "Evolution is so creative. That's how we got giraffes.",
+                    mediaPreviewUrls = listOf(),
+                    link = URI("https://www.twitter.com/Kurt_Vonnegut/status/1328248207466504192"),
+                    tweetedAt = Instant.ofEpochSecond(1605514024),
+                ),
+            ),
+        )
+
+        require(result is Success)
+        assertEquals(expectedResult, result.value)
+    }
+
+    @Test
     fun invalidJson() {
         val result = parser.readProfile("<not-json>")
 
