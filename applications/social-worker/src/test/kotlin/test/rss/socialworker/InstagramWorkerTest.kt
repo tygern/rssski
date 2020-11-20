@@ -40,7 +40,7 @@ class InstagramWorkerTest {
         instagramResponseRepository
     )
 
-    private val worker = InstagramWorker("test worker", instagramResponseService)
+    private val worker = InstagramWorker(1, instagramResponseService)
 
     @BeforeTest
     fun setUp() {

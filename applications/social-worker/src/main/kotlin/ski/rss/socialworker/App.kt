@@ -3,6 +3,7 @@ package ski.rss.socialworker
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.util.KtorExperimentalAPI
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import redis.clients.jedis.JedisPool
 import ski.rss.instagram.response.InstagramClient
@@ -16,6 +17,7 @@ import ski.rss.workersupport.WorkScheduler
 import java.net.URI
 import kotlin.time.minutes
 
+@ObsoleteCoroutinesApi
 @KtorExperimentalAPI
 fun main() = runBlocking {
     val instagramUrl = URI(System.getenv("INSTAGRAM_URL")
@@ -39,10 +41,8 @@ fun main() = runBlocking {
     val scheduler = WorkScheduler(
         finder = SocialWorkFinder(jedisPool),
         workers = listOf(
-            InstagramWorker("Instagram 1", instagramResponseService),
-            InstagramWorker("Instagram 2", instagramResponseService),
-            TwitterWorker("Twitter 1", twitterResponseService),
-            TwitterWorker("Twitter 2", twitterResponseService),
+            InstagramWorker(1, instagramResponseService),
+            TwitterWorker(2, twitterResponseService),
         ),
         interval = updateInterval.minutes,
     )

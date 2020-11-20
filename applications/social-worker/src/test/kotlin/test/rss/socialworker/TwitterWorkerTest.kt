@@ -42,7 +42,7 @@ class TwitterWorkerTest {
         twitterResponseRepository
     )
 
-    private val worker = TwitterWorker("test worker", twitterResponseService)
+    private val worker = TwitterWorker(1, twitterResponseService)
 
     @BeforeTest
     fun setUp() {

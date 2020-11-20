@@ -1,16 +1,19 @@
 package ski.rss.workersupport
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newFixedThreadPoolContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
 import kotlin.time.Duration
 
+@ObsoleteCoroutinesApi
 class WorkScheduler<T>(
     private val finder: WorkFinder<T>,
     private val workers: List<Worker<T>>,
@@ -42,7 +45,7 @@ class WorkScheduler<T>(
     }
 
     private fun CoroutineScope.listenForWork(worker: Worker<T>) =
-        launch {
+        launch(newFixedThreadPoolContext(worker.numberOfThreads, worker.name)) {
             for (work in channel) {
                 if (worker.canExecute(work)) {
                     logger.info("Worker ${worker.name} is starting to work on $work")

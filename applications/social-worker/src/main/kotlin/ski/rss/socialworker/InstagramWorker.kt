@@ -6,9 +6,10 @@ import ski.rss.instagram.response.InstagramResponseService
 import ski.rss.workersupport.Worker
 
 class InstagramWorker(
-    override val name: String,
+    override val numberOfThreads: Int,
     private val responseService: InstagramResponseService,
 ) : Worker<SocialAccount> {
+    override val name = "Instagram"
     override fun canExecute(task: SocialAccount): Boolean = task is InstagramAccount
     override suspend fun execute(task: SocialAccount): Result<Unit> =
         if (task is InstagramAccount) {
