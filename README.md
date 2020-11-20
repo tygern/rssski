@@ -34,6 +34,8 @@ into an RSS feed.
 1.  Run the worker.
     ```bash
     INSTAGRAM_URL="https://www.instagram.com" \
+    TWITTER_URL="https://api.twitter.com" \
+    TWITTER_BEARER_TOKEN=$YOUR_BEARER_TOKEN \
     REDIS_URL="redis://127.0.0.1:6379" \
     UPDATE_INTERVAL="60" \
     java -jar applications/social-worker/build/libs/social-worker.jar
@@ -47,17 +49,23 @@ into an RSS feed.
 
 ## Usage
 
-1.  Add an instagram feed for the worker to follow.
+1.  Add one or more social feeds for the worker to follow.
 
     ```bash
     curl -XPOST ${RSSSKI_APP_URL}/instagram/accidentallywesanderson
+    curl -XPOST ${RSSSKI_APP_URL}/twitter/kurt_vonnegut
     ```
 
-1.  Add the feed url (`${RSSSKI_APP_URL}/instagram/accidentallywesanderson`) to your favorite RSS reader.
+1.  Add the feed url(s) to your favorite RSS reader.
+
+    ```
+    ${RSSSKI_APP_URL}/instagram/accidentallywesanderson
+    ${RSSSKI_APP_URL}/twitter/kurt_vonnegut
+    ```
 
 1.  The worker fetches social feeds periodically, so be patient while waiting for your feed to update. 
 
-## Deploy
+## Deploy to Heroku
 
 1.  Login to Heroku.
     ```bash
@@ -74,11 +82,18 @@ into an RSS feed.
     heroku deploy:jar applications/rssski-app/build/libs/rssski-app.jar --app rssski
     ```
 
+1.  Attach the Heroku Redis add-on to your app.
+    ```bash
+    heroku addons:create heroku-redis:hobby-dev -a rssski
+    ```
+
 1.  Run the social worker jar somewhere that is able to access Instagram profiles.
-    I run it on a Raspberry Pi using _nohup_
+    I run it on a Raspberry Pi using _nohup_,
     
     ```bash
     INSTAGRAM_URL="https://www.instagram.com" \
+    TWITTER_URL="https://api.twitter.com" \
+    TWITTER_BEARER_TOKEN=$YOUR_BEARER_TOKEN \
     REDIS_URL="${HEROKU_REDIS_URL}" \
     UPDATE_INTERVAL="60" \
     nohup java -jar social-worker.jar > social-worker.jar &
