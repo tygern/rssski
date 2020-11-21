@@ -1,4 +1,4 @@
-package ski.rss.instagramrss
+package ski.rss.instagram.rss
 
 import ski.rss.instagram.profile.InstagramPost
 import ski.rss.instagram.profile.InstagramProfile

@@ -1,4 +1,4 @@
-package ski.rss.twitterrss
+package ski.rss.twitter.rss
 
 import io.ktor.application.call
 import io.ktor.http.ContentType

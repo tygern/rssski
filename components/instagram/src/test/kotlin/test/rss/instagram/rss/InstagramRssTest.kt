@@ -1,8 +1,8 @@
-package test.rss.instagramfeed
+package test.rss.instagram.rss
 
 import ski.rss.instagram.profile.InstagramPost
 import ski.rss.instagram.profile.InstagramProfile
-import ski.rss.instagramrss.rssFromProfile
+import ski.rss.instagram.rss.rssFromProfile
 import ski.rss.rss.ImagePosition
 import ski.rss.rss.Item
 import ski.rss.rss.Rss

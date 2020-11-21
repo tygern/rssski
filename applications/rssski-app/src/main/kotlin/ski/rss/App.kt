@@ -22,13 +22,13 @@ import ski.rss.instagram.profile.InstagramJsonParser
 import ski.rss.instagram.profile.InstagramProfileRepository
 import ski.rss.instagram.profile.InstagramProfileService
 import ski.rss.instagram.response.InstagramResponseRepository
-import ski.rss.instagramrss.instagramRss
+import ski.rss.instagram.rss.instagramRss
 import ski.rss.redissupport.jedisPool
 import ski.rss.twitter.profile.TwitterJsonParser
 import ski.rss.twitter.profile.TwitterProfileRepository
 import ski.rss.twitter.profile.TwitterProfileService
 import ski.rss.twitter.response.TwitterResponseRepository
-import ski.rss.twitterrss.twitterRss
+import ski.rss.twitter.rss.twitterRss
 import java.net.URI
 
 @KtorExperimentalAPI

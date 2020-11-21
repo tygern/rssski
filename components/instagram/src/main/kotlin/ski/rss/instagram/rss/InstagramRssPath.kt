@@ -1,4 +1,4 @@
-package ski.rss.instagramrss
+package ski.rss.instagram.rss
 
 import io.ktor.application.call
 import io.ktor.http.ContentType
@@ -11,8 +11,8 @@ import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.Route
 import ski.rss.functionalsupport.Failure
-import ski.rss.instagram.profile.InstagramProfileService
 import ski.rss.functionalsupport.Success
+import ski.rss.instagram.profile.InstagramProfileService
 import ski.rss.rss.serialize
 
 @KtorExperimentalLocationsAPI

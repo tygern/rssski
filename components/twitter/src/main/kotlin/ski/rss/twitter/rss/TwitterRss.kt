@@ -1,4 +1,4 @@
-package ski.rss.twitterrss
+package ski.rss.twitter.rss
 
 import ski.rss.rss.ImagePosition
 import ski.rss.rss.Item
