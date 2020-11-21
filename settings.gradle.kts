@@ -4,6 +4,7 @@ include(
 
     "components:instagram",
     "components:rss",
+    "components:social-account",
     "components:twitter",
 
     "components:functional-support",

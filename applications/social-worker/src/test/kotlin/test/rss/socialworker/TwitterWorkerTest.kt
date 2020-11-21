@@ -5,10 +5,10 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
 import ski.rss.functionalsupport.Failure
+import ski.rss.instagram.InstagramAccount
 import ski.rss.redissupport.jedisPool
-import ski.rss.socialworker.InstagramAccount
-import ski.rss.socialworker.TwitterAccount
 import ski.rss.socialworker.TwitterWorker
+import ski.rss.twitter.TwitterAccount
 import ski.rss.twitter.response.TwitterClient
 import ski.rss.twitter.response.TwitterResponseRepository
 import ski.rss.twitter.response.TwitterResponseService

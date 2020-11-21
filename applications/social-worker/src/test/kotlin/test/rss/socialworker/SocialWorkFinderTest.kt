@@ -1,10 +1,10 @@
 package test.rss.socialworker
 
+import ski.rss.instagram.InstagramAccount
 import ski.rss.instagram.response.instagramPrefix
 import ski.rss.redissupport.jedisPool
-import ski.rss.socialworker.InstagramAccount
 import ski.rss.socialworker.SocialWorkFinder
-import ski.rss.socialworker.TwitterAccount
+import ski.rss.twitter.TwitterAccount
 import ski.rss.twitter.response.twitterPrefix
 import java.net.URI
 import kotlin.test.BeforeTest

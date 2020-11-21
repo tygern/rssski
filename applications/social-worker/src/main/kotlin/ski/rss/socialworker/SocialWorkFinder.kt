@@ -1,6 +1,9 @@
 package ski.rss.socialworker
 
 import redis.clients.jedis.JedisPool
+import ski.rss.instagram.InstagramAccount
+import ski.rss.socialaccount.SocialAccount
+import ski.rss.twitter.TwitterAccount
 import ski.rss.workersupport.WorkFinder
 
 class SocialWorkFinder(private val jedisPool: JedisPool) : WorkFinder<SocialAccount> {
