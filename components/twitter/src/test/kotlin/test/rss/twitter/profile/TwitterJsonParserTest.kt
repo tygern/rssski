@@ -2,9 +2,9 @@ package test.rss.twitter.profile
 
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
-import ski.rss.twitter.profile.Tweet
-import ski.rss.twitter.profile.TwitterJsonParser
-import ski.rss.twitter.profile.TwitterProfile
+import ski.rss.twitter.response.Tweet
+import ski.rss.twitter.response.TwitterJsonParser
+import ski.rss.twitter.response.TwitterProfile
 import java.net.URI
 import java.time.Instant
 import kotlin.test.Test

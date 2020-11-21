@@ -24,9 +24,9 @@ import ski.rss.instagram.response.InstagramJsonParser
 import ski.rss.instagram.response.InstagramResponseRepository
 import ski.rss.instagram.rss.instagramRss
 import ski.rss.redissupport.jedisPool
-import ski.rss.twitter.profile.TwitterJsonParser
 import ski.rss.twitter.profile.TwitterProfileRepository
-import ski.rss.twitter.profile.TwitterProfileService
+import ski.rss.twitter.response.TwitterFeedService
+import ski.rss.twitter.response.TwitterJsonParser
 import ski.rss.twitter.response.TwitterResponseRepository
 import ski.rss.twitter.rss.twitterRss
 import java.net.URI
@@ -54,13 +54,15 @@ fun Application.module(
 
     val jedisPool = jedisPool(redisUrl)
 
-    val twitterProfileService = twitterProfileService(jedisPool)
     val instagramProfileRepository = InstagramProfileRepository(jedisPool)
     val instagramFeedService = instagramFeedService(jedisPool)
 
+    val twitterProfileRepository = TwitterProfileRepository(jedisPool)
+    val twitterFeedService = twitterFeedService(jedisPool)
+
     install(Routing) {
         instagramRss(instagramFeedService, instagramProfileRepository)
-        twitterRss(twitterProfileService)
+        twitterRss(twitterFeedService, twitterProfileRepository)
         info()
         staticContent()
     }
@@ -81,17 +83,11 @@ fun main() {
     ).start()
 }
 
-private fun twitterProfileService(jedisPool: JedisPool): TwitterProfileService {
-    val twitterJsonParser = TwitterJsonParser()
-    val twitterResponseRepository = TwitterResponseRepository(jedisPool)
-    val twitterProfileRepository = TwitterProfileRepository(jedisPool)
-
-    return TwitterProfileService(
-        jsonParser = twitterJsonParser,
-        responseRepository = twitterResponseRepository,
-        profileRepository = twitterProfileRepository,
+private fun twitterFeedService(jedisPool: JedisPool) =
+    TwitterFeedService(
+        jsonParser = TwitterJsonParser(),
+        responseRepository = TwitterResponseRepository(jedisPool),
     )
-}
 
 private fun instagramFeedService(jedisPool: JedisPool) =
     InstagramFeedService(

@@ -3,8 +3,8 @@ package test.rss.twitter.rss
 import ski.rss.rss.ImagePosition
 import ski.rss.rss.Item
 import ski.rss.rss.Rss
-import ski.rss.twitter.profile.Tweet
-import ski.rss.twitter.profile.TwitterProfile
+import ski.rss.twitter.response.Tweet
+import ski.rss.twitter.response.TwitterProfile
 import ski.rss.twitter.rss.rssFromProfile
 import java.net.URI
 import java.time.Instant

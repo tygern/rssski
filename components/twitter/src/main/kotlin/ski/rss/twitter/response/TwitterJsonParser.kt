@@ -1,4 +1,4 @@
-package ski.rss.twitter.profile
+package ski.rss.twitter.response
 
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
