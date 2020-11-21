@@ -1,10 +1,10 @@
-package test.rss.instagram.profile
+package test.rss.instagram.response
 
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
-import ski.rss.instagram.profile.InstagramJsonParser
-import ski.rss.instagram.profile.InstagramPost
-import ski.rss.instagram.profile.InstagramProfile
+import ski.rss.instagram.response.InstagramJsonParser
+import ski.rss.instagram.response.InstagramPost
+import ski.rss.instagram.response.InstagramProfile
 import java.net.URI
 import java.time.Instant
 import kotlin.test.Test

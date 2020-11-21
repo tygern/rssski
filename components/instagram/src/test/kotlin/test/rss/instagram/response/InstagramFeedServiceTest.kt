@@ -1,27 +1,23 @@
-package test.rss.instagram.profile
+package test.rss.instagram.response
 
 import io.mockk.coEvery
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ski.rss.functionalsupport.Failure
-import ski.rss.instagram.profile.InstagramJsonParser
-import ski.rss.instagram.profile.InstagramProfileService
-import ski.rss.instagram.response.InstagramResponseRepository
 import ski.rss.functionalsupport.Success
-import ski.rss.instagram.profile.InstagramProfileRepository
+import ski.rss.instagram.response.InstagramFeedService
+import ski.rss.instagram.response.InstagramJsonParser
+import ski.rss.instagram.response.InstagramResponseRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
-class InstagramProfileServiceTest {
+class InstagramFeedServiceTest {
     private val responseRepository: InstagramResponseRepository = mockk(relaxUnitFun = true)
-    private val profileRepository: InstagramProfileRepository = mockk(relaxUnitFun = true)
 
-    private val service = InstagramProfileService(
+    private val service = InstagramFeedService(
         jsonParser = InstagramJsonParser(),
-        responseRepository = responseRepository,
-        profileRepository = profileRepository,
+        responseRepository = responseRepository
     )
 
     private val testName = "finnsadventures"
@@ -37,7 +33,7 @@ class InstagramProfileServiceTest {
     }
 
     @Test
-    fun testNotFound() {
+    fun testFetchNotFound() {
         coEvery { responseRepository.fetch(testName) } returns null
 
         val result = service.fetch(testName)
@@ -47,19 +43,12 @@ class InstagramProfileServiceTest {
     }
 
     @Test
-    fun testJsonParseError() {
+    fun testFetchJsonParseError() {
         coEvery { responseRepository.fetch(testName) } returns "<junk>"
 
         val result = service.fetch(testName)
 
         require(result is Failure)
         assertEquals("Failed to parse JSON from Instagram response.", result.reason)
-    }
-
-    @Test
-    fun testSave() {
-        service.save("birds")
-
-        verify { profileRepository.save("birds") }
     }
 }

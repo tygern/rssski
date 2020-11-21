@@ -18,9 +18,9 @@ import io.ktor.server.jetty.Jetty
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.json.Json
 import redis.clients.jedis.JedisPool
-import ski.rss.instagram.profile.InstagramJsonParser
 import ski.rss.instagram.profile.InstagramProfileRepository
-import ski.rss.instagram.profile.InstagramProfileService
+import ski.rss.instagram.response.InstagramFeedService
+import ski.rss.instagram.response.InstagramJsonParser
 import ski.rss.instagram.response.InstagramResponseRepository
 import ski.rss.instagram.rss.instagramRss
 import ski.rss.redissupport.jedisPool
@@ -54,11 +54,12 @@ fun Application.module(
 
     val jedisPool = jedisPool(redisUrl)
 
-    val instagramProfileService = instagramProfileService(jedisPool)
     val twitterProfileService = twitterProfileService(jedisPool)
+    val instagramProfileRepository = InstagramProfileRepository(jedisPool)
+    val instagramFeedService = instagramFeedService(jedisPool)
 
     install(Routing) {
-        instagramRss(instagramProfileService)
+        instagramRss(instagramFeedService, instagramProfileRepository)
         twitterRss(twitterProfileService)
         info()
         staticContent()
@@ -92,14 +93,8 @@ private fun twitterProfileService(jedisPool: JedisPool): TwitterProfileService {
     )
 }
 
-private fun instagramProfileService(jedisPool: JedisPool): InstagramProfileService {
-    val instagramJsonParser = InstagramJsonParser()
-    val instagramResponseRepository = InstagramResponseRepository(jedisPool)
-    val instagramProfileRepository = InstagramProfileRepository(jedisPool)
-
-    return InstagramProfileService(
-        jsonParser = instagramJsonParser,
-        responseRepository = instagramResponseRepository,
-        profileRepository = instagramProfileRepository,
+private fun instagramFeedService(jedisPool: JedisPool) =
+    InstagramFeedService(
+        InstagramJsonParser(),
+        InstagramResponseRepository(jedisPool)
     )
-}
