@@ -3,9 +3,9 @@ package test.rss.twitter.rss
 import ski.rss.rss.ImagePosition
 import ski.rss.rss.Item
 import ski.rss.rss.Rss
-import ski.rss.twitter.response.Tweet
-import ski.rss.twitter.response.TwitterProfile
-import ski.rss.twitter.rss.rssFromProfile
+import ski.rss.twitter.feed.Tweet
+import ski.rss.twitter.feed.TwitterContent
+import ski.rss.twitter.rss.rssFromContent
 import java.net.URI
 import java.time.Instant
 import kotlin.test.Test
@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
 class TwitterRssTest {
     @Test
     fun testRssFromProfile() {
-        val profile = TwitterProfile(
+        val profile = TwitterContent(
             name = "Finn's Adventures",
             username = "@finn",
             description = "Some cool adventures",
@@ -39,7 +39,7 @@ class TwitterRssTest {
             ),
         )
 
-        val result = rssFromProfile(profile)
+        val result = rssFromContent(profile)
 
         val expectedResult = Rss(
             title = "Finn's Adventures",

@@ -24,10 +24,10 @@ import ski.rss.instagram.response.InstagramJsonParser
 import ski.rss.instagram.response.InstagramResponseRepository
 import ski.rss.instagram.rss.instagramRss
 import ski.rss.redissupport.jedisPool
-import ski.rss.twitter.profile.TwitterProfileRepository
-import ski.rss.twitter.response.TwitterFeedService
-import ski.rss.twitter.response.TwitterJsonParser
-import ski.rss.twitter.response.TwitterResponseRepository
+import ski.rss.socialaccount.AccountContentRepository
+import ski.rss.socialaccount.AccountRepository
+import ski.rss.twitter.feed.TwitterFetchContentService
+import ski.rss.twitter.feed.TwitterJsonParser
 import ski.rss.twitter.rss.twitterRss
 import java.net.URI
 
@@ -57,12 +57,16 @@ fun Application.module(
     val instagramProfileRepository = InstagramProfileRepository(jedisPool)
     val instagramFeedService = instagramFeedService(jedisPool)
 
-    val twitterProfileRepository = TwitterProfileRepository(jedisPool)
-    val twitterFeedService = twitterFeedService(jedisPool)
+    val accountRepository = AccountRepository(jedisPool)
+
+    val twitterFetchContentService = TwitterFetchContentService(
+        jsonParser = TwitterJsonParser(),
+        contentRepository = AccountContentRepository(jedisPool),
+    )
 
     install(Routing) {
         instagramRss(instagramFeedService, instagramProfileRepository)
-        twitterRss(twitterFeedService, twitterProfileRepository)
+        twitterRss(twitterFetchContentService, accountRepository)
         info()
         staticContent()
     }
@@ -82,12 +86,6 @@ fun main() {
         module = { module(redisUrl, forceHttps) }
     ).start()
 }
-
-private fun twitterFeedService(jedisPool: JedisPool) =
-    TwitterFeedService(
-        jsonParser = TwitterJsonParser(),
-        responseRepository = TwitterResponseRepository(jedisPool),
-    )
 
 private fun instagramFeedService(jedisPool: JedisPool) =
     InstagramFeedService(

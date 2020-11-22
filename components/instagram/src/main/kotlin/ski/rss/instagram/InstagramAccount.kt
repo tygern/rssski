@@ -2,4 +2,4 @@ package ski.rss.instagram
 
 import ski.rss.socialaccount.SocialAccount
 
-data class InstagramAccount(override val username: String) : SocialAccount(username, "twitter")
+class InstagramAccount(username: String) : SocialAccount(username, "instagram")

@@ -13,8 +13,9 @@ import io.ktor.routing.Route
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
 import ski.rss.rss.serialize
-import ski.rss.twitter.profile.TwitterProfileRepository
-import ski.rss.twitter.response.TwitterFeedService
+import ski.rss.socialaccount.AccountRepository
+import ski.rss.twitter.feed.TwitterAccount
+import ski.rss.twitter.feed.TwitterFetchContentService
 
 @KtorExperimentalLocationsAPI
 @Location("/twitter/{name}")
@@ -22,14 +23,16 @@ data class TwitterRssPath(val name: String)
 
 @KtorExperimentalLocationsAPI
 fun Route.twitterRss(
-    feedService: TwitterFeedService,
-    profileRepository: TwitterProfileRepository,
+    fetchContentService: TwitterFetchContentService,
+    accountRepository: AccountRepository,
 ) {
     get<TwitterRssPath> {
-        when (val result = feedService.fetch(it.name)) {
+        val account = TwitterAccount(it.name)
+
+        when (val result = fetchContentService.fetch(account)) {
             is Success -> {
                 call.respondText(
-                    text = rssFromProfile(result.value).serialize(),
+                    text = rssFromContent(result.value).serialize(),
                     contentType = ContentType.Application.Rss,
                 )
             }
@@ -43,7 +46,9 @@ fun Route.twitterRss(
     }
 
     post<TwitterRssPath> {
-        profileRepository.save(it.name)
+        val account = TwitterAccount(it.name)
+
+        accountRepository.save(account)
 
         call.respond(HttpStatusCode.NoContent)
     }

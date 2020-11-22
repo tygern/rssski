@@ -9,7 +9,6 @@ import io.ktor.server.testing.contentType
 import io.ktor.server.testing.handleRequest
 import io.ktor.util.KtorExperimentalAPI
 import redis.clients.jedis.JedisPool
-import ski.rss.twitter.response.twitterPrefix
 import java.nio.charset.Charset
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -23,8 +22,8 @@ class TwitterReadRssTest {
     @BeforeTest
     fun setUp() {
         jedisPool.resource.use {
-            it.set("$twitterPrefix:chelseafc", javaClass.getResource("/twitter-chelseafc.json").readText())
-            it.set("$twitterPrefix:givemejunk", "<junk>")
+            it.set("twitter:chelseafc", javaClass.getResource("/twitter-chelseafc.json").readText())
+            it.set("twitter:givemejunk", "<junk>")
         }
     }
 

@@ -1,11 +1,9 @@
 package test.rss.socialworker
 
 import ski.rss.instagram.InstagramAccount
-import ski.rss.instagram.response.instagramPrefix
 import ski.rss.redissupport.jedisPool
 import ski.rss.socialworker.SocialWorkFinder
-import ski.rss.twitter.TwitterAccount
-import ski.rss.twitter.response.twitterPrefix
+import ski.rss.twitter.feed.TwitterAccount
 import java.net.URI
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -28,9 +26,9 @@ class SocialWorkFinderTest {
     fun testFindRequested() {
         jedisPool.resource.use {
             it.sadd("feeds",
-                "$instagramPrefix:accidentallywesanderson",
-                "$instagramPrefix:chelseafc",
-                "$twitterPrefix:chelseafc",
+                "instagram:accidentallywesanderson",
+                "instagram:chelseafc",
+                "twitter:chelseafc",
                 "another:account"
             )
         }

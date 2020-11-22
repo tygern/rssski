@@ -1,4 +1,4 @@
-package ski.rss.twitter.response
+package ski.rss.twitter.feed
 
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
@@ -15,7 +15,7 @@ class TwitterClient(
     private val bearerToken: String,
     private val httpClient: HttpClient,
 ) {
-    suspend fun fetchProfile(name: String): Result<String> = try {
+    suspend fun fetchContent(account: TwitterAccount): Result<String> = try {
         val response = httpClient.request<String> {
             url {
                 protocol = URLProtocol.createOrDefault(twitterUrl.scheme)
@@ -28,7 +28,7 @@ class TwitterClient(
                 encodedPath = "/2/tweets/search/recent"
 
                 parameters.apply {
-                    append("query", "from:$name")
+                    append("query", "from:${account.username}")
                     append("max_results", "60")
                     append("expansions", "author_id,attachments.media_keys")
                     append("user.fields", "name,description,profile_image_url")
@@ -45,7 +45,7 @@ class TwitterClient(
 
         Success(response)
     } catch (e: ClientRequestException) {
-        Failure("Failed to fetch Twitter profile $name: ${e.message}")
+        Failure("Failed to fetch content for account $account: ${e.message}")
     }
 }
 

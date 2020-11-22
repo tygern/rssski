@@ -10,9 +10,9 @@ import ski.rss.instagram.response.InstagramClient
 import ski.rss.instagram.response.InstagramResponseRepository
 import ski.rss.instagram.response.InstagramResponseService
 import ski.rss.redissupport.jedisPool
-import ski.rss.twitter.response.TwitterClient
-import ski.rss.twitter.response.TwitterResponseRepository
-import ski.rss.twitter.response.TwitterResponseService
+import ski.rss.socialaccount.AccountContentRepository
+import ski.rss.twitter.feed.TwitterClient
+import ski.rss.twitter.feed.TwitterSaveContentService
 import ski.rss.workersupport.WorkScheduler
 import java.net.URI
 import kotlin.time.minutes
@@ -35,8 +35,13 @@ fun main() = runBlocking {
     val httpClient = HttpClient(CIO)
     val jedisPool = jedisPool(redisUrl)
 
+    val contentRepository = AccountContentRepository(jedisPool)
     val instagramResponseService = instagramResponseService(instagramUrl, httpClient, jedisPool)
-    val twitterResponseService = twitterResponseService(twitterUrl, twitterBearerToken, httpClient, jedisPool)
+
+    val twitterResponseService = TwitterSaveContentService(
+        twitterClient = TwitterClient(twitterUrl, twitterBearerToken, httpClient),
+        contentRepository = contentRepository
+    )
 
     val scheduler = WorkScheduler(
         finder = SocialWorkFinder(jedisPool),
@@ -57,15 +62,5 @@ private fun instagramResponseService(instagramUrl: URI, httpClient: HttpClient, 
     return InstagramResponseService(
         instagramClient,
         instagramResponseRepository
-    )
-}
-
-private fun twitterResponseService(twitterUrl: URI, twitterBearerToken: String, httpClient: HttpClient, jedisPool: JedisPool): TwitterResponseService {
-    val twitterClient = TwitterClient(twitterUrl, twitterBearerToken, httpClient)
-    val twitterResponseRepository = TwitterResponseRepository(jedisPool)
-
-    return TwitterResponseService(
-        twitterClient,
-        twitterResponseRepository
     )
 }

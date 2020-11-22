@@ -1,4 +1,4 @@
-package ski.rss.twitter.response
+package ski.rss.twitter.feed
 
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
@@ -21,7 +21,7 @@ class TwitterJsonParser {
         private val logger: Logger = LoggerFactory.getLogger(TwitterJsonParser::class.java)
     }
 
-    fun readProfile(json: String): Result<TwitterProfile> {
+    fun readProfile(json: String): Result<TwitterContent> {
         val tweets = tweetsJson(json)
         val profile = profileJson(json)
         val media = mediaJson(json)
@@ -39,8 +39,8 @@ class TwitterJsonParser {
         }
     }
 
-    private fun twitterFeed(tweets: JsonArray, profile: JsonObject, media: JsonArray): TwitterProfile =
-        TwitterProfile(
+    private fun twitterFeed(tweets: JsonArray, profile: JsonObject, media: JsonArray): TwitterContent =
+        TwitterContent(
             name = profile.getString("name"),
             username = "@${profile.getString("username")}",
             description = profile.getString("description"),
@@ -108,7 +108,7 @@ class TwitterJsonParser {
 private fun JsonObject.getArray(name: String): JsonArray = this[name]!!.jsonArray
 private fun JsonObject.getString(name: String): String = this[name]!!.jsonPrimitive.content
 
-data class TwitterProfile(
+data class TwitterContent(
     val name: String,
     val username: String,
     val description: String,

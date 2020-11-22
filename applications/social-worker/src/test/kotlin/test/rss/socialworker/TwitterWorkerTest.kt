@@ -7,12 +7,11 @@ import kotlinx.coroutines.runBlocking
 import ski.rss.functionalsupport.Failure
 import ski.rss.instagram.InstagramAccount
 import ski.rss.redissupport.jedisPool
+import ski.rss.socialaccount.AccountContentRepository
 import ski.rss.socialworker.TwitterWorker
-import ski.rss.twitter.TwitterAccount
-import ski.rss.twitter.response.TwitterClient
-import ski.rss.twitter.response.TwitterResponseRepository
-import ski.rss.twitter.response.TwitterResponseService
-import ski.rss.twitter.response.twitterPrefix
+import ski.rss.twitter.feed.TwitterAccount
+import ski.rss.twitter.feed.TwitterClient
+import ski.rss.twitter.feed.TwitterSaveContentService
 import test.rss.socialworker.support.FakeTwitterServer
 import java.net.URI
 import kotlin.test.AfterTest
@@ -35,11 +34,11 @@ class TwitterWorkerTest {
         bearerToken = twitterServer.validBearerToken,
         httpClient = httpClient,
     )
-    private val twitterResponseRepository = TwitterResponseRepository(jedisPool)
+    private val contentRepository = AccountContentRepository(jedisPool)
 
-    private val twitterResponseService = TwitterResponseService(
+    private val twitterResponseService = TwitterSaveContentService(
         twitterClient,
-        twitterResponseRepository
+        contentRepository
     )
 
     private val worker = TwitterWorker(1, twitterResponseService)
@@ -49,7 +48,7 @@ class TwitterWorkerTest {
         twitterServer.start()
 
         jedisPool.resource.use {
-            it.del("$twitterPrefix:chelseafc")
+            it.del("twitter:chelseafc")
         }
     }
 
@@ -67,7 +66,7 @@ class TwitterWorkerTest {
             fail(result.reason)
         } else {
             val storedResponse = jedisPool.resource.use {
-                it.get("$twitterPrefix:chelseafc")
+                it.get("twitter:chelseafc")
             }
 
             assertEquals("{\"some\": \"json\"}", storedResponse)

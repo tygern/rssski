@@ -12,7 +12,7 @@ import ski.rss.instagram.response.InstagramResponseService
 import ski.rss.instagram.response.instagramPrefix
 import ski.rss.redissupport.jedisPool
 import ski.rss.socialworker.InstagramWorker
-import ski.rss.twitter.TwitterAccount
+import ski.rss.twitter.feed.TwitterAccount
 import test.rss.socialworker.support.FakeInstagramServer
 import java.net.URI
 import kotlin.test.AfterTest

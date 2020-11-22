@@ -1,10 +1,10 @@
-package test.rss.twitter.profile
+package test.rss.twitter.feed
 
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
-import ski.rss.twitter.response.Tweet
-import ski.rss.twitter.response.TwitterJsonParser
-import ski.rss.twitter.response.TwitterProfile
+import ski.rss.twitter.feed.Tweet
+import ski.rss.twitter.feed.TwitterContent
+import ski.rss.twitter.feed.TwitterJsonParser
 import java.net.URI
 import java.time.Instant
 import kotlin.test.Test
@@ -19,7 +19,7 @@ class TwitterJsonParserTest {
 
         val result = parser.readProfile(profileJson)
 
-        val expectedResult = TwitterProfile(
+        val expectedResult = TwitterContent(
             name = "Chelsea FC",
             username = "@ChelseaFC",
             description = "Welcome to the official Twitter account of Chelsea Football Club. Download our app, the 5th Stand! \uD83D\uDCF2",
@@ -62,7 +62,7 @@ class TwitterJsonParserTest {
 
         val result = parser.readProfile(profileJson)
 
-        val expectedResult = TwitterProfile(
+        val expectedResult = TwitterContent(
             name = "Kurt Vonnegut",
             username = "@Kurt_Vonnegut",
             description = "",

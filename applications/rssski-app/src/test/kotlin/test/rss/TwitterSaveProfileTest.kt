@@ -6,7 +6,6 @@ import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.handleRequest
 import io.ktor.util.KtorExperimentalAPI
 import redis.clients.jedis.JedisPool
-import ski.rss.twitter.response.twitterPrefix
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -33,6 +32,6 @@ class TwitterSaveProfileTest {
             it.smembers("feeds")
         }
 
-        assertEquals(setOf("$twitterPrefix:finnsadventures"), feeds)
+        assertEquals(setOf("twitter:finnsadventures"), feeds)
     }
 }

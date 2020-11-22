@@ -1,4 +1,4 @@
-package test.rss.twitter.response
+package test.rss.twitter.feed
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -13,7 +13,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
-import ski.rss.twitter.response.TwitterClient
+import ski.rss.twitter.feed.TwitterAccount
+import ski.rss.twitter.feed.TwitterClient
 import java.net.URI
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -29,7 +30,7 @@ class TwitterClientTest {
 
     @Test
     fun testFetchProfile() = runBlockingTest {
-        val result = client.fetchProfile("finnsadventures")
+        val result = client.fetchContent(TwitterAccount("finnsadventures"))
 
         require(result is Success)
         assertEquals("a response", result.value)
@@ -37,10 +38,10 @@ class TwitterClientTest {
 
     @Test
     fun testFetchProfileFailure() = runBlockingTest {
-        val result = client.fetchProfile("noprofilehere")
+        val result = client.fetchContent(TwitterAccount("noprofilehere"))
 
         require(result is Failure)
-        assertEquals("Failed to fetch Twitter profile noprofilehere: Client request(http://twitter.example.com/2/tweets/search/recent?query=from%3Anoprofilehere&max_results=60&expansions=author_id%2Cattachments.media_keys&user.fields=name%2Cdescription%2Cprofile_image_url&tweet.fields=created_at%2Cattachments&media.fields=preview_image_url%2Curl) " +
+        assertEquals("Failed to fetch content for account twitter:noprofilehere: Client request(http://twitter.example.com/2/tweets/search/recent?query=from%3Anoprofilehere&max_results=60&expansions=author_id%2Cattachments.media_keys&user.fields=name%2Cdescription%2Cprofile_image_url&tweet.fields=created_at%2Cattachments&media.fields=preview_image_url%2Curl) " +
             "invalid: 400 Bad Request", result.reason)
     }
 }
