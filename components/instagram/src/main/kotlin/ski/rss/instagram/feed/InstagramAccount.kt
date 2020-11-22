@@ -1,4 +1,4 @@
-package ski.rss.instagram
+package ski.rss.instagram.feed
 
 import ski.rss.socialaccount.SocialAccount
 

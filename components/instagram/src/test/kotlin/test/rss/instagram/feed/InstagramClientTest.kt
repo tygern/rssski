@@ -1,4 +1,4 @@
-package test.rss.instagram.response
+package test.rss.instagram.feed
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -13,7 +13,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
-import ski.rss.instagram.response.InstagramClient
+import ski.rss.instagram.feed.InstagramAccount
+import ski.rss.instagram.feed.InstagramClient
 import java.net.URI
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -27,7 +28,7 @@ class InstagramClientTest {
 
     @Test
     fun testFetchProfile() = runBlockingTest {
-        val result = client.fetchProfile("finnsadventures")
+        val result = client.fetchProfile(InstagramAccount("finnsadventures"))
 
         require(result is Success)
         assertEquals("a response", result.value)
@@ -35,18 +36,18 @@ class InstagramClientTest {
 
     @Test
     fun testFetchProfileNotJson() = runBlockingTest {
-        val result = client.fetchProfile("notjson")
+        val result = client.fetchProfile(InstagramAccount("notjson"))
 
         require(result is Failure)
-        assertEquals("Failed to fetch Instagram profile notjson: Instagram did not return JSON, which probably means it want you to authenticate", result.reason)
+        assertEquals("Failed to fetch account instagram:notjson: Instagram did not return JSON, which probably means it want you to authenticate", result.reason)
     }
 
     @Test
     fun testFetchProfileFailure() = runBlockingTest {
-        val result = client.fetchProfile("noprofilehere")
+        val result = client.fetchProfile(InstagramAccount("noprofilehere"))
 
         require(result is Failure)
-        assertEquals("Failed to fetch Instagram profile noprofilehere: Client request(http://instagram.example.com/noprofilehere?__a=1) invalid: 400 Bad Request", result.reason)
+        assertEquals("Failed to fetch account instagram:noprofilehere: Client request(http://instagram.example.com/noprofilehere?__a=1) invalid: 400 Bad Request", result.reason)
     }
 }
 

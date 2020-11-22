@@ -1,7 +1,7 @@
 package ski.rss.socialworker
 
 import redis.clients.jedis.JedisPool
-import ski.rss.instagram.InstagramAccount
+import ski.rss.instagram.feed.InstagramAccount
 import ski.rss.socialaccount.SocialAccount
 import ski.rss.twitter.feed.TwitterAccount
 import ski.rss.workersupport.WorkFinder

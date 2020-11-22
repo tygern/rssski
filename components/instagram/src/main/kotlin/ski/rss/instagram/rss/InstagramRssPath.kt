@@ -12,9 +12,10 @@ import io.ktor.response.respondText
 import io.ktor.routing.Route
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
-import ski.rss.instagram.profile.InstagramProfileRepository
-import ski.rss.instagram.response.InstagramFeedService
+import ski.rss.instagram.feed.InstagramAccount
+import ski.rss.instagram.feed.InstagramFetchContentService
 import ski.rss.rss.serialize
+import ski.rss.socialaccount.AccountRepository
 
 @KtorExperimentalLocationsAPI
 @Location("/instagram/{name}")
@@ -22,11 +23,13 @@ data class InstagramRssPath(val name: String)
 
 @KtorExperimentalLocationsAPI
 fun Route.instagramRss(
-    feedService: InstagramFeedService,
-    profileRepository: InstagramProfileRepository,
+    fetchContentService: InstagramFetchContentService,
+    accountRepository: AccountRepository,
 ) {
     get<InstagramRssPath> {
-        when (val result = feedService.fetch(it.name)) {
+        val account = InstagramAccount(it.name)
+
+        when (val result = fetchContentService.fetch(account)) {
             is Success -> {
                 call.respondText(
                     text = rssFromProfile(result.value).serialize(),
@@ -43,7 +46,9 @@ fun Route.instagramRss(
     }
 
     post<InstagramRssPath> {
-        profileRepository.save(it.name)
+        val account = InstagramAccount(it.name)
+
+        accountRepository.save(account)
 
         call.respond(HttpStatusCode.NoContent)
     }

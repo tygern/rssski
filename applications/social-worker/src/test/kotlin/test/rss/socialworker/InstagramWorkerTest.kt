@@ -5,12 +5,11 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
 import ski.rss.functionalsupport.Success
-import ski.rss.instagram.InstagramAccount
-import ski.rss.instagram.response.InstagramClient
-import ski.rss.instagram.response.InstagramResponseRepository
-import ski.rss.instagram.response.InstagramResponseService
-import ski.rss.instagram.response.instagramPrefix
+import ski.rss.instagram.feed.InstagramAccount
+import ski.rss.instagram.feed.InstagramClient
+import ski.rss.instagram.feed.InstagramSaveContentService
 import ski.rss.redissupport.jedisPool
+import ski.rss.socialaccount.AccountContentRepository
 import ski.rss.socialworker.InstagramWorker
 import ski.rss.twitter.feed.TwitterAccount
 import test.rss.socialworker.support.FakeInstagramServer
@@ -33,11 +32,11 @@ class InstagramWorkerTest {
         instagramUrl = instagramServer.url,
         httpClient = httpClient
     )
-    private val instagramResponseRepository = InstagramResponseRepository(jedisPool)
+    private val contentRepository = AccountContentRepository(jedisPool)
 
-    private val instagramResponseService = InstagramResponseService(
-        instagramClient,
-        instagramResponseRepository
+    private val instagramResponseService = InstagramSaveContentService(
+        instagramClient = instagramClient,
+        contentRepository = contentRepository
     )
 
     private val worker = InstagramWorker(1, instagramResponseService)
@@ -47,7 +46,7 @@ class InstagramWorkerTest {
         instagramServer.start()
 
         jedisPool.resource.use {
-            it.del("$instagramPrefix:finnsadventures")
+            it.del("instagram:finnsadventures")
         }
     }
 
@@ -63,7 +62,7 @@ class InstagramWorkerTest {
         assert(result is Success)
 
         val storedResponse = jedisPool.resource.use {
-            it.get("$instagramPrefix:finnsadventures")
+            it.get("instagram:finnsadventures")
         }
 
         assertEquals("{\"some\": \"json\"}", storedResponse)

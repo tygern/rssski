@@ -5,10 +5,8 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import redis.clients.jedis.JedisPool
-import ski.rss.instagram.response.InstagramClient
-import ski.rss.instagram.response.InstagramResponseRepository
-import ski.rss.instagram.response.InstagramResponseService
+import ski.rss.instagram.feed.InstagramClient
+import ski.rss.instagram.feed.InstagramSaveContentService
 import ski.rss.redissupport.jedisPool
 import ski.rss.socialaccount.AccountContentRepository
 import ski.rss.twitter.feed.TwitterClient
@@ -36,7 +34,11 @@ fun main() = runBlocking {
     val jedisPool = jedisPool(redisUrl)
 
     val contentRepository = AccountContentRepository(jedisPool)
-    val instagramResponseService = instagramResponseService(instagramUrl, httpClient, jedisPool)
+
+    val instagramResponseService = InstagramSaveContentService(
+        instagramClient = InstagramClient(instagramUrl, httpClient),
+        contentRepository = contentRepository
+    )
 
     val twitterResponseService = TwitterSaveContentService(
         twitterClient = TwitterClient(twitterUrl, twitterBearerToken, httpClient),
@@ -55,12 +57,3 @@ fun main() = runBlocking {
     scheduler.start()
 }
 
-private fun instagramResponseService(instagramUrl: URI, httpClient: HttpClient, jedisPool: JedisPool): InstagramResponseService {
-    val instagramClient = InstagramClient(instagramUrl, httpClient)
-    val instagramResponseRepository = InstagramResponseRepository(jedisPool)
-
-    return InstagramResponseService(
-        instagramClient,
-        instagramResponseRepository
-    )
-}

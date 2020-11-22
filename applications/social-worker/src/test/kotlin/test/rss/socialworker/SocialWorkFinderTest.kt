@@ -1,6 +1,6 @@
 package test.rss.socialworker
 
-import ski.rss.instagram.InstagramAccount
+import ski.rss.instagram.feed.InstagramAccount
 import ski.rss.redissupport.jedisPool
 import ski.rss.socialworker.SocialWorkFinder
 import ski.rss.twitter.feed.TwitterAccount
