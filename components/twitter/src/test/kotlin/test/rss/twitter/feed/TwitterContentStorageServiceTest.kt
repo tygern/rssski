@@ -8,19 +8,19 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
-import ski.rss.socialaccount.AccountContentRepository
+import ski.rss.socialaccount.SocialContentRepository
 import ski.rss.twitter.feed.TwitterAccount
 import ski.rss.twitter.feed.TwitterClient
-import ski.rss.twitter.feed.TwitterSaveContentService
+import ski.rss.twitter.feed.TwitterContentStorageService
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
-class TwitterSaveContentServiceTest {
+class TwitterContentStorageServiceTest {
     private val twitterClient: TwitterClient = mockk()
-    private val contentRepository: AccountContentRepository = mockk(relaxUnitFun = true)
+    private val contentRepository: SocialContentRepository = mockk(relaxUnitFun = true)
 
-    private val service = TwitterSaveContentService(
+    private val service = TwitterContentStorageService(
         twitterClient = twitterClient,
         contentRepository = contentRepository
     )
@@ -28,7 +28,7 @@ class TwitterSaveContentServiceTest {
     private val account = TwitterAccount("finnsadventures")
 
     @Test
-    fun testStoreProfile() = runBlockingTest {
+    fun testStoreContent() = runBlockingTest {
         coEvery { twitterClient.fetchContent(account) } returns Success("{\"some\": \"response\"}")
 
         val result = service.save(account)
@@ -38,7 +38,7 @@ class TwitterSaveContentServiceTest {
     }
 
     @Test
-    fun testStoreProfileFailure() = runBlockingTest {
+    fun testStoreContentFailure() = runBlockingTest {
         coEvery { twitterClient.fetchContent(account) } returns Failure("An error message")
 
         val result = service.save(account)

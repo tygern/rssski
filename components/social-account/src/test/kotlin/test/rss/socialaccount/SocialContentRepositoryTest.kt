@@ -1,8 +1,8 @@
 package test.rss.socialaccount
 
 import redis.clients.jedis.JedisPool
-import ski.rss.socialaccount.AccountContentRepository
 import ski.rss.socialaccount.SocialAccount
+import ski.rss.socialaccount.SocialContentRepository
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -12,9 +12,9 @@ private class BirdAccount : SocialAccount(
     platform = "bird",
 )
 
-class AccountContentRepositoryTest {
+class SocialContentRepositoryTest {
     private val jedisPool = JedisPool()
-    private val repo = AccountContentRepository(jedisPool)
+    private val repo = SocialContentRepository(jedisPool)
 
     private val account = BirdAccount()
 

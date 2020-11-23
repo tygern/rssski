@@ -7,11 +7,11 @@ import kotlinx.coroutines.runBlocking
 import ski.rss.functionalsupport.Failure
 import ski.rss.instagram.feed.InstagramAccount
 import ski.rss.redissupport.jedisPool
-import ski.rss.socialaccount.AccountContentRepository
+import ski.rss.socialaccount.SocialContentRepository
 import ski.rss.socialworker.TwitterWorker
 import ski.rss.twitter.feed.TwitterAccount
 import ski.rss.twitter.feed.TwitterClient
-import ski.rss.twitter.feed.TwitterSaveContentService
+import ski.rss.twitter.feed.TwitterContentStorageService
 import test.rss.socialworker.support.FakeTwitterServer
 import java.net.URI
 import kotlin.test.AfterTest
@@ -34,9 +34,9 @@ class TwitterWorkerTest {
         bearerToken = twitterServer.validBearerToken,
         httpClient = httpClient,
     )
-    private val contentRepository = AccountContentRepository(jedisPool)
+    private val contentRepository = SocialContentRepository(jedisPool)
 
-    private val twitterResponseService = TwitterSaveContentService(
+    private val twitterResponseService = TwitterContentStorageService(
         twitterClient,
         contentRepository
     )

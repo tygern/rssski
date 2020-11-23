@@ -2,23 +2,27 @@ package test.rss.instagram.feed
 
 import io.mockk.coEvery
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
 import ski.rss.instagram.feed.InstagramAccount
-import ski.rss.instagram.feed.InstagramFetchContentService
+import ski.rss.instagram.feed.InstagramContentService
 import ski.rss.instagram.feed.InstagramJsonParser
-import ski.rss.socialaccount.AccountContentRepository
+import ski.rss.socialaccount.SocialAccountRepository
+import ski.rss.socialaccount.SocialContentRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
-class InstagramFetchContentServiceTest {
-    private val contentRepository: AccountContentRepository = mockk(relaxUnitFun = true)
+class InstagramContentServiceTest {
+    private val contentRepository: SocialContentRepository = mockk(relaxUnitFun = true)
+    private val accountRepository: SocialAccountRepository = mockk(relaxUnitFun = true)
 
-    private val service = InstagramFetchContentService(
+    private val service = InstagramContentService(
         jsonParser = InstagramJsonParser(),
-        contentRepository = contentRepository
+        contentRepository = contentRepository,
+        accountRepository = accountRepository,
     )
 
     private val account = InstagramAccount("finnsadventures")
@@ -51,5 +55,12 @@ class InstagramFetchContentServiceTest {
 
         require(result is Failure)
         assertEquals("Failed to parse JSON from Instagram response.", result.reason)
+    }
+
+    @Test
+    fun testSubscribe() {
+        service.subscribe(account)
+
+        verify { accountRepository.save(account) }
     }
 }

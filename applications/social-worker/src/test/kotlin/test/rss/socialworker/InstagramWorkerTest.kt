@@ -7,9 +7,9 @@ import kotlinx.coroutines.runBlocking
 import ski.rss.functionalsupport.Success
 import ski.rss.instagram.feed.InstagramAccount
 import ski.rss.instagram.feed.InstagramClient
-import ski.rss.instagram.feed.InstagramSaveContentService
+import ski.rss.instagram.feed.InstagramContentStorageService
 import ski.rss.redissupport.jedisPool
-import ski.rss.socialaccount.AccountContentRepository
+import ski.rss.socialaccount.SocialContentRepository
 import ski.rss.socialworker.InstagramWorker
 import ski.rss.twitter.feed.TwitterAccount
 import test.rss.socialworker.support.FakeInstagramServer
@@ -32,9 +32,9 @@ class InstagramWorkerTest {
         instagramUrl = instagramServer.url,
         httpClient = httpClient
     )
-    private val contentRepository = AccountContentRepository(jedisPool)
+    private val contentRepository = SocialContentRepository(jedisPool)
 
-    private val instagramResponseService = InstagramSaveContentService(
+    private val instagramResponseService = InstagramContentStorageService(
         instagramClient = instagramClient,
         contentRepository = contentRepository
     )

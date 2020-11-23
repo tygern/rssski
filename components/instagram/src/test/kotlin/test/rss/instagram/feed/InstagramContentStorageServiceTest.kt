@@ -10,17 +10,17 @@ import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
 import ski.rss.instagram.feed.InstagramAccount
 import ski.rss.instagram.feed.InstagramClient
-import ski.rss.instagram.feed.InstagramSaveContentService
-import ski.rss.socialaccount.AccountContentRepository
+import ski.rss.instagram.feed.InstagramContentStorageService
+import ski.rss.socialaccount.SocialContentRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
-class InstagramSaveContentServiceTest {
+class InstagramContentStorageServiceTest {
     private val instagramClient: InstagramClient = mockk()
-    private val contentRepository: AccountContentRepository = mockk(relaxUnitFun = true)
+    private val contentRepository: SocialContentRepository = mockk(relaxUnitFun = true)
 
-    private val service = InstagramSaveContentService(
+    private val service = InstagramContentStorageService(
         instagramClient = instagramClient,
         contentRepository = contentRepository,
     )
@@ -28,20 +28,20 @@ class InstagramSaveContentServiceTest {
     private val account = InstagramAccount("finnsadventures")
 
     @Test
-    fun testStoreProfile() = runBlockingTest {
+    fun testStoreContent() = runBlockingTest {
         coEvery { instagramClient.fetchProfile(account) } returns Success("{\"some\": \"response\"}")
 
-        val result = service.save(account)
+        val result = service.storeContent(account)
 
         require(result is Success)
         verify { contentRepository.save(account, "{\"some\": \"response\"}") }
     }
 
     @Test
-    fun testStoreProfileFailure() = runBlockingTest {
+    fun testStoreContentFailure() = runBlockingTest {
         coEvery { instagramClient.fetchProfile(account) } returns Failure("An error message")
 
-        val result = service.save(account)
+        val result = service.storeContent(account)
 
         require(result is Failure)
         assertEquals("An error message", result.reason)

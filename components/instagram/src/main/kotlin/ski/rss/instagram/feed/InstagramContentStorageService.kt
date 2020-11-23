@@ -1,13 +1,13 @@
 package ski.rss.instagram.feed
 
 import ski.rss.functionalsupport.Result
-import ski.rss.socialaccount.AccountContentRepository
+import ski.rss.socialaccount.SocialContentRepository
 
-class InstagramSaveContentService(
+class InstagramContentStorageService(
     private val instagramClient: InstagramClient,
-    private val contentRepository: AccountContentRepository,
+    private val contentRepository: SocialContentRepository,
 ) {
-    suspend fun save(account: InstagramAccount): Result<Unit> =
+    suspend fun storeContent(account: InstagramAccount): Result<Unit> =
         instagramClient.fetchProfile(account).map { content ->
             contentRepository.save(account, content)
         }

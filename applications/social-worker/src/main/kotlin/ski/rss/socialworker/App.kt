@@ -6,11 +6,11 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import ski.rss.instagram.feed.InstagramClient
-import ski.rss.instagram.feed.InstagramSaveContentService
+import ski.rss.instagram.feed.InstagramContentStorageService
 import ski.rss.redissupport.jedisPool
-import ski.rss.socialaccount.AccountContentRepository
+import ski.rss.socialaccount.SocialContentRepository
 import ski.rss.twitter.feed.TwitterClient
-import ski.rss.twitter.feed.TwitterSaveContentService
+import ski.rss.twitter.feed.TwitterContentStorageService
 import ski.rss.workersupport.WorkScheduler
 import java.net.URI
 import kotlin.time.minutes
@@ -33,14 +33,14 @@ fun main() = runBlocking {
     val httpClient = HttpClient(CIO)
     val jedisPool = jedisPool(redisUrl)
 
-    val contentRepository = AccountContentRepository(jedisPool)
+    val contentRepository = SocialContentRepository(jedisPool)
 
-    val instagramResponseService = InstagramSaveContentService(
+    val instagramContentStorageService = InstagramContentStorageService(
         instagramClient = InstagramClient(instagramUrl, httpClient),
         contentRepository = contentRepository
     )
 
-    val twitterResponseService = TwitterSaveContentService(
+    val twitterContentStorageService = TwitterContentStorageService(
         twitterClient = TwitterClient(twitterUrl, twitterBearerToken, httpClient),
         contentRepository = contentRepository
     )
@@ -48,12 +48,11 @@ fun main() = runBlocking {
     val scheduler = WorkScheduler(
         finder = SocialWorkFinder(jedisPool),
         workers = listOf(
-            InstagramWorker(1, instagramResponseService),
-            TwitterWorker(2, twitterResponseService),
+            InstagramWorker(numberOfThreads = 1, instagramContentStorageService),
+            TwitterWorker(numberOfThreads = 2, twitterContentStorageService),
         ),
         interval = updateInterval.minutes,
     )
 
     scheduler.start()
 }
-

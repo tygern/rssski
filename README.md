@@ -49,7 +49,7 @@ into an RSS feed.
 
 ## Usage
 
-1.  Add one or more social feeds for the worker to follow.
+1.  Subscribe to one or more social feeds for the worker to follow.
 
     ```bash
     curl -XPOST ${RSSSKI_APP_URL}/instagram/accidentallywesanderson

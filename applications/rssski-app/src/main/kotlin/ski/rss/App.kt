@@ -17,13 +17,13 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.jetty.Jetty
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.json.Json
-import ski.rss.instagram.feed.InstagramFetchContentService
+import ski.rss.instagram.feed.InstagramContentService
 import ski.rss.instagram.feed.InstagramJsonParser
 import ski.rss.instagram.rss.instagramRss
 import ski.rss.redissupport.jedisPool
-import ski.rss.socialaccount.AccountContentRepository
-import ski.rss.socialaccount.AccountRepository
-import ski.rss.twitter.feed.TwitterFetchContentService
+import ski.rss.socialaccount.SocialAccountRepository
+import ski.rss.socialaccount.SocialContentRepository
+import ski.rss.twitter.feed.TwitterContentService
 import ski.rss.twitter.feed.TwitterJsonParser
 import ski.rss.twitter.rss.twitterRss
 import java.net.URI
@@ -51,22 +51,24 @@ fun Application.module(
 
     val jedisPool = jedisPool(redisUrl)
 
-    val accountRepository = AccountRepository(jedisPool)
-    val contentRepository = AccountContentRepository(jedisPool)
+    val accountRepository = SocialAccountRepository(jedisPool)
+    val contentRepository = SocialContentRepository(jedisPool)
 
-    val twitterFetchContentService = TwitterFetchContentService(
+    val twitterContentService = TwitterContentService(
         jsonParser = TwitterJsonParser(),
         contentRepository = contentRepository,
+        accountRepository = accountRepository,
     )
 
-    val instagramFetchContentService = InstagramFetchContentService(
+    val instagramContentService = InstagramContentService(
         jsonParser = InstagramJsonParser(),
         contentRepository = contentRepository,
+        accountRepository = accountRepository,
     )
 
     install(Routing) {
-        instagramRss(instagramFetchContentService, accountRepository)
-        twitterRss(twitterFetchContentService, accountRepository)
+        instagramRss(instagramContentService)
+        twitterRss(twitterContentService)
         info()
         staticContent()
     }

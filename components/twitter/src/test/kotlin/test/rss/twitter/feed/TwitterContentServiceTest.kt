@@ -2,21 +2,25 @@ package test.rss.twitter.feed
 
 import io.mockk.coEvery
 import io.mockk.mockk
+import io.mockk.verify
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
-import ski.rss.socialaccount.AccountContentRepository
+import ski.rss.socialaccount.SocialAccountRepository
+import ski.rss.socialaccount.SocialContentRepository
 import ski.rss.twitter.feed.TwitterAccount
-import ski.rss.twitter.feed.TwitterFetchContentService
+import ski.rss.twitter.feed.TwitterContentService
 import ski.rss.twitter.feed.TwitterJsonParser
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TwitterFetchContentServiceTest {
-    private val contentRepository: AccountContentRepository = mockk(relaxUnitFun = true)
+class TwitterContentServiceTest {
+    private val contentRepository: SocialContentRepository = mockk(relaxUnitFun = true)
+    private val accountRepository: SocialAccountRepository = mockk(relaxUnitFun = true)
 
-    private val service = TwitterFetchContentService(
+    private val service = TwitterContentService(
         jsonParser = TwitterJsonParser(),
         contentRepository = contentRepository,
+        accountRepository = accountRepository,
     )
 
     private val account = TwitterAccount("chelseafc")
@@ -49,5 +53,12 @@ class TwitterFetchContentServiceTest {
 
         require(result is Failure)
         assertEquals("Failed to parse JSON from Twitter response.", result.reason)
+    }
+
+    @Test
+    fun testSubscribe() {
+        service.subscribe(account)
+
+        verify { accountRepository.save(account) }
     }
 }
