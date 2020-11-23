@@ -61,11 +61,10 @@ class TwitterJsonParser {
         )
 
     private fun mediaPreviews(tweet: JsonObject, media: JsonArray): List<URI> {
-        val attachments = tweet["attachments"] ?: return listOf()
+        val attachments = tweet["attachments"]?.jsonObject ?: return listOf()
+        val mediaKeys = attachments["media_keys"]?.jsonArray ?: return listOf()
 
-        return attachments.jsonObject.getArray("media_keys").mapNotNull {
-            mediaUrl(it.jsonPrimitive.content, media)
-        }
+        return mediaKeys.mapNotNull { mediaUrl(it.jsonPrimitive.content, media) }
     }
 
     private fun mediaUrl(mediaKey: String, media: JsonArray): URI? {
@@ -105,7 +104,6 @@ class TwitterJsonParser {
     }
 }
 
-private fun JsonObject.getArray(name: String): JsonArray = this[name]!!.jsonArray
 private fun JsonObject.getString(name: String): String = this[name]!!.jsonPrimitive.content
 
 data class TwitterContent(
