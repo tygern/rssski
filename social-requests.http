@@ -1,0 +1,13 @@
+GET https://api.twitter.com/2/tweets/20
+Authorization: Bearer {{twitterBearerToken}}
+
+###
+
+GET https://api.twitter.com/2/tweets/search/recent?query=from:chelseafc&max_results=10&expansions=author_id,attachments.media_keys&user.fields=name,description,profile_image_url&tweet.fields=created_at,attachments&media.fields=preview_image_url,url
+Authorization: Bearer {{twitterBearerToken}}
+
+###
+
+GET https://www.instagram.com/accidentallywesanderson?__a=1
+
+###
