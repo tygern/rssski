@@ -14,51 +14,47 @@ import java.time.Instant
 class TwitterJsonParser {
     private val formatter = Json { ignoreUnknownKeys = true }
 
-    fun readProfile(json: String): Result<TwitterContent> {
-        val twitterContent = try {
-            formatter.decodeFromString<TwitterJson>(json)
-        } catch (e: SerializationException) {
-            return Failure("Failed to parse JSON from Twitter response.")
-        }
-
-        val tweets = twitterContent.data
-        val media = twitterContent.includes.media
-        val profile = twitterContent.includes.users[0]
-
-        return Success(twitterContent(tweets, profile, media))
+    fun readProfile(json: String): Result<TwitterContent> = try {
+        val twitterJson = formatter.decodeFromString<TwitterJson>(json)
+        Success(twitterJson.twitterContent())
+    } catch (e: SerializationException) {
+        Failure("Failed to parse JSON from Twitter response.")
     }
+}
 
-    private fun twitterContent(tweets: List<TweetJson>, profile: UserJson, media: List<MediaJson>): TwitterContent =
+@Serializable
+private data class TwitterJson(
+    @SerialName("data")
+    val tweets: List<TweetJson> = emptyList(),
+    val includes: IncludesJson
+) {
+    private val profile = includes.users[0]
+    private val media = includes.media
+
+    fun twitterContent(): TwitterContent =
         TwitterContent(
             name = profile.name,
             username = "@${profile.username}",
             description = profile.description,
             link = URI("https://www.twitter.com/${profile.username}"),
             imageUrl = URI(profile.profileImageUrl),
-            tweets = tweets.map {
-                twitterPost(it, profile, media)
-            }
-                .sortedByDescending(Tweet::tweetedAt),
+            tweets = tweets.map(::twitterPost).sortedByDescending(Tweet::tweetedAt),
         )
 
-    private fun twitterPost(tweet: TweetJson, profile: UserJson, media: List<MediaJson>): Tweet =
+    private fun twitterPost(tweet: TweetJson): Tweet =
         Tweet(
             description = tweet.text,
-            mediaPreviewUrls = mediaPreviews(tweet, media),
+            mediaPreviewUrls = mediaPreviews(tweet),
             link = URI("https://www.twitter.com/${profile.username}/status/${tweet.id}"),
             tweetedAt = Instant.parse(tweet.createdAt)
         )
 
-    private fun mediaPreviews(tweet: TweetJson, media: List<MediaJson>): List<URI> {
-        val mediaKeys = tweet.attachments.mediaKeys
-
-        return mediaKeys.mapNotNull { mediaUrl(it, media) }
+    private fun mediaPreviews(tweet: TweetJson): List<URI> {
+        return tweet.attachments.mediaKeys.mapNotNull { mediaUrl(it) }
     }
 
-    private fun mediaUrl(mediaKey: String, media: List<MediaJson>): URI? {
-        val mediaJson = media
-            .find { it.mediaKey == mediaKey }
-            ?: return null
+    private fun mediaUrl(mediaKey: String): URI? {
+        val mediaJson = media.find { it.mediaKey == mediaKey } ?: return null
 
         return when {
             mediaJson.url != null -> URI(mediaJson.url)
@@ -67,12 +63,6 @@ class TwitterJsonParser {
         }
     }
 }
-
-@Serializable
-private data class TwitterJson(
-    val data: List<TweetJson> = emptyList(),
-    val includes: IncludesJson
-)
 
 @Serializable
 private data class TweetJson(
