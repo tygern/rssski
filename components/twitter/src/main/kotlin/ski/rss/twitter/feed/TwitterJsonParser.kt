@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -33,9 +32,9 @@ class TwitterJsonParser {
         }
 
         val profile = profileJson(json)
-        val media = mediaJson(json)
 
         val tweets = twitterContent.data
+        val media = twitterContent.includes.media
 
         return if (profile == null) {
             logger.error(
@@ -52,7 +51,7 @@ class TwitterJsonParser {
         }
     }
 
-    private fun twitterFeed(tweets: List<TweetJson>, profile: JsonObject, media: JsonArray): TwitterContent =
+    private fun twitterFeed(tweets: List<TweetJson>, profile: JsonObject, media: List<MediaJson>): TwitterContent =
         TwitterContent(
             name = profile.getString("name"),
             username = "@${profile.getString("username")}",
@@ -65,7 +64,7 @@ class TwitterJsonParser {
                 .sortedByDescending(Tweet::tweetedAt),
         )
 
-    private fun twitterPost(tweet: TweetJson, profile: JsonObject, media: JsonArray): Tweet =
+    private fun twitterPost(tweet: TweetJson, profile: JsonObject, media: List<MediaJson>): Tweet =
         Tweet(
             description = tweet.text,
             mediaPreviewUrls = mediaPreviews(tweet, media),
@@ -73,24 +72,20 @@ class TwitterJsonParser {
             tweetedAt = Instant.parse(tweet.createdAt)
         )
 
-    private fun mediaPreviews(tweet: TweetJson, media: JsonArray): List<URI> {
+    private fun mediaPreviews(tweet: TweetJson, media: List<MediaJson>): List<URI> {
         val mediaKeys = tweet.attachments.mediaKeys
 
         return mediaKeys.mapNotNull { mediaUrl(it, media) }
     }
 
-    private fun mediaUrl(mediaKey: String, media: JsonArray): URI? {
+    private fun mediaUrl(mediaKey: String, media: List<MediaJson>): URI? {
         val mediaJson = media
-            .map { it.jsonObject }
-            .find { it.getString("media_key") == mediaKey }
+            .find { it.mediaKey == mediaKey }
             ?: return null
 
-        val url = mediaJson["url"]
-        val previewImageUrl = mediaJson["preview_image_url"]
-
         return when {
-            url != null -> URI(url.jsonPrimitive.content)
-            previewImageUrl != null -> URI(previewImageUrl.jsonPrimitive.content)
+            mediaJson.url != null -> URI(mediaJson.url)
+            mediaJson.previewImageUrl != null -> URI(mediaJson.previewImageUrl)
             else -> null
         }
     }
@@ -101,20 +96,14 @@ class TwitterJsonParser {
         logger.error("JSON parse error {}", e.message)
         null
     }
-
-    private fun mediaJson(json: String): JsonArray = try {
-        Json.decodeFromString<JsonObject>(json)["includes"]?.jsonObject?.get("media")?.jsonArray
-            ?: JsonArray(emptyList())
-    } catch (e: SerializationException) {
-        JsonArray(emptyList())
-    }
 }
 
 private fun JsonObject.getString(name: String): String = this[name]!!.jsonPrimitive.content
 
 @Serializable
 private data class TwitterJson(
-    val data: List<TweetJson>
+    val data: List<TweetJson> = emptyList(),
+    val includes: IncludesJson = IncludesJson()
 )
 
 @Serializable
@@ -132,6 +121,20 @@ private data class TweetJson(
 private data class AttachmentsJson(
     @SerialName("media_keys")
     val mediaKeys: List<String> = emptyList(),
+)
+
+@Serializable
+private data class IncludesJson(
+    val media: List<MediaJson> = emptyList()
+)
+
+@Serializable
+private data class MediaJson(
+    @SerialName("media_key")
+    val mediaKey: String,
+    val url: String? = null,
+    @SerialName("preview_image_url")
+    val previewImageUrl: String? = null,
 )
 
 data class TwitterContent(
