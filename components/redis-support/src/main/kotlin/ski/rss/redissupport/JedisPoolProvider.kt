@@ -10,17 +10,16 @@ import redis.clients.jedis.exceptions.JedisConnectionException
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
 import java.net.URI
+import kotlin.concurrent.fixedRateTimer
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 
-class JedisPoolProvider(redisUrlProvider: RedisUrlProvider) {
+@ExperimentalTime
+class JedisPoolProvider(private val redisUrlProvider: RedisUrlProvider) {
     private var jedisPool: JedisPool
 
     init {
-        val redisUrl = when (val redisUrlResult = redisUrlProvider.fetchUrl()) {
-            is Success -> redisUrlResult.value
-            is Failure -> throw UnableToCreateJedisPoolException(redisUrlResult.reason)
-        }
-
-        jedisPool = jedisPool(redisUrl)
+        jedisPool = currentJedisPool()
     }
 
     companion object {
@@ -29,7 +28,27 @@ class JedisPoolProvider(redisUrlProvider: RedisUrlProvider) {
 
     fun <T> useResource(block: Jedis.() -> T): T = jedisPool.resource.use(block)
 
-    private fun jedisPool(redisUrl: URI): JedisPool {
+    fun updateEvery(interval: Duration) {
+        fixedRateTimer(
+            name = "JedisPool refresh",
+            initialDelay = interval.toLongMilliseconds(),
+            period = interval.toLongMilliseconds(),
+        ) {
+            logger.info("updatingJedisInformation")
+            jedisPool = currentJedisPool()
+        }
+    }
+
+    private fun currentJedisPool(): JedisPool {
+        val redisUrl = when (val redisUrlResult = redisUrlProvider.fetchUrl()) {
+            is Success -> redisUrlResult.value
+            is Failure -> throw UnableToCreateJedisPoolException(redisUrlResult.reason)
+        }
+
+        return buildJedisPool(redisUrl)
+    }
+
+    private fun buildJedisPool(redisUrl: URI): JedisPool {
         val poolConfig = JedisPoolConfig().apply {
             maxTotal = 10
             maxIdle = 5

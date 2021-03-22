@@ -15,6 +15,7 @@ import ski.rss.twitter.feed.TwitterContentStorageService
 import ski.rss.workersupport.WorkScheduler
 import java.net.URI
 import kotlin.time.minutes
+import kotlin.time.seconds
 
 @ObsoleteCoroutinesApi
 @KtorExperimentalAPI
@@ -39,7 +40,9 @@ fun main() = runBlocking {
         bearerToken = configBearerToken,
         httpClient = httpClient,
     )
-    val jedisPool = JedisPoolProvider(redisUrlProvider)
+    val jedisPool = JedisPoolProvider(redisUrlProvider).apply {
+        updateEvery(10.minutes)
+    }
 
     val contentRepository = SocialContentRepository(jedisPool)
 
