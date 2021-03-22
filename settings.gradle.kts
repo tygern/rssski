@@ -1,4 +1,5 @@
 include(
+    "applications:local-config-server",
     "applications:rssski-app",
     "applications:social-worker",
 

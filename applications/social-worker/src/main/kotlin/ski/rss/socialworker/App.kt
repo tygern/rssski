@@ -1,13 +1,14 @@
 package ski.rss.socialworker
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.util.*
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import ski.rss.instagram.feed.InstagramClient
 import ski.rss.instagram.feed.InstagramContentStorageService
-import ski.rss.redissupport.jedisPool
+import ski.rss.redissupport.ConfigServerRedisUrlProvider
+import ski.rss.redissupport.JedisPoolProvider
 import ski.rss.socialaccount.SocialContentRepository
 import ski.rss.twitter.feed.TwitterClient
 import ski.rss.twitter.feed.TwitterContentStorageService
@@ -24,14 +25,21 @@ fun main() = runBlocking {
         ?: throw RuntimeException("Please set the TWITTER_URL environment variable"))
     val twitterBearerToken = System.getenv("TWITTER_BEARER_TOKEN")
         ?: throw RuntimeException("Please set the TWITTER_BEARER_TOKEN environment variable")
-
-    val redisUrl = System.getenv("REDIS_URL")?.let(::URI)
-        ?: throw RuntimeException("Please set the REDIS_URL environment variable")
     val updateInterval = System.getenv("UPDATE_INTERVAL").toIntOrNull()
         ?: throw RuntimeException("Please set the UPDATE_INTERVAL environment variable to an integer value of minutes")
+    val configBearerToken = System.getenv("CONFIG_BEARER_TOKEN")
+        ?: throw RuntimeException("Please set the CONFIG_BEARER_TOKEN environment variable")
+    val configUrl = URI(System.getenv("CONFIG_URL")
+        ?: throw RuntimeException("Please set the CONFIG_URL environment variable"))
 
     val httpClient = HttpClient(CIO)
-    val jedisPool = jedisPool(redisUrl)
+
+    val redisUrlProvider = ConfigServerRedisUrlProvider(
+        configUrl = configUrl,
+        bearerToken = configBearerToken,
+        httpClient = httpClient,
+    )
+    val jedisPool = JedisPoolProvider(redisUrlProvider)
 
     val contentRepository = SocialContentRepository(jedisPool)
 

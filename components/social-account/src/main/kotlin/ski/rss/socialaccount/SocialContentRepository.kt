@@ -1,16 +1,16 @@
 package ski.rss.socialaccount
 
-import redis.clients.jedis.JedisPool
+import ski.rss.redissupport.JedisPoolProvider
 
-class SocialContentRepository(private val jedisPool: JedisPool) {
+class SocialContentRepository(private val jedisPool: JedisPoolProvider) {
     fun save(account: SocialAccount, content: String) {
-        jedisPool.resource.use {
-            it.set(account.toString(), content)
+        jedisPool.useResource {
+            set(account.toString(), content)
         }
     }
 
     fun fetch(account: SocialAccount): String? =
-        jedisPool.resource.use {
-            it.get(account.toString())
+        jedisPool.useResource {
+            get(account.toString())
         }
 }

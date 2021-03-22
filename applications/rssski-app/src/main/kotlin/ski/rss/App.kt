@@ -1,26 +1,19 @@
 package ski.rss
 
-import io.ktor.application.Application
-import io.ktor.application.install
-import io.ktor.features.AutoHeadResponse
-import io.ktor.features.CallLogging
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.DefaultHeaders
-import io.ktor.features.HttpsRedirect
-import io.ktor.features.XForwardedHeaderSupport
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Locations
-import io.ktor.routing.Routing
-import io.ktor.serialization.DefaultJson
-import io.ktor.serialization.json
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.jetty.Jetty
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.locations.*
+import io.ktor.routing.*
+import io.ktor.serialization.*
+import io.ktor.server.engine.*
+import io.ktor.server.jetty.*
+import io.ktor.util.*
 import kotlinx.serialization.json.Json
 import ski.rss.instagram.feed.InstagramContentService
 import ski.rss.instagram.feed.InstagramJsonParser
 import ski.rss.instagram.rss.instagramRss
-import ski.rss.redissupport.jedisPool
+import ski.rss.redissupport.JedisPoolProvider
+import ski.rss.redissupport.StaticRedisUrlProvider
 import ski.rss.socialaccount.SocialAccountRepository
 import ski.rss.socialaccount.SocialContentRepository
 import ski.rss.twitter.feed.TwitterContentService
@@ -49,7 +42,7 @@ fun Application.module(
         install(HttpsRedirect)
     }
 
-    val jedisPool = jedisPool(redisUrl)
+    val jedisPool = JedisPoolProvider(StaticRedisUrlProvider(redisUrl))
 
     val accountRepository = SocialAccountRepository(jedisPool)
     val contentRepository = SocialContentRepository(jedisPool)

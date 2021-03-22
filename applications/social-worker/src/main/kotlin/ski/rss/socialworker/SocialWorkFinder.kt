@@ -1,15 +1,21 @@
 package ski.rss.socialworker
 
-import redis.clients.jedis.JedisPool
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import redis.clients.jedis.exceptions.JedisConnectionException
 import ski.rss.instagram.feed.InstagramAccount
+import ski.rss.redissupport.JedisPoolProvider
 import ski.rss.socialaccount.SocialAccount
 import ski.rss.twitter.feed.TwitterAccount
 import ski.rss.workersupport.WorkFinder
 
-class SocialWorkFinder(private val jedisPool: JedisPool) : WorkFinder<SocialAccount> {
-    override fun findRequested(): List<SocialAccount> =
-        jedisPool.resource
-            .use { it.smembers("feeds") }
+class SocialWorkFinder(private val jedisPool: JedisPoolProvider) : WorkFinder<SocialAccount> {
+    companion object {
+        private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+    }
+
+    override fun findRequested(): List<SocialAccount> = try {
+        jedisPool.useResource { smembers("feeds") }
             .mapNotNull {
                 val prefix = it.split(":")[0]
                 val name = it.split(":")[1]
@@ -21,4 +27,8 @@ class SocialWorkFinder(private val jedisPool: JedisPool) : WorkFinder<SocialAcco
                 }
             }
             .toList()
+    } catch (e: JedisConnectionException) {
+        logger.error("Failed to connect to Redis: {}", e)
+        listOf()
+    }
 }
