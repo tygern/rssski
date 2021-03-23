@@ -10,16 +10,25 @@ import redis.clients.jedis.exceptions.JedisConnectionException
 import ski.rss.functionalsupport.Failure
 import ski.rss.functionalsupport.Success
 import java.net.URI
+import java.util.*
 import kotlin.concurrent.fixedRateTimer
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 class JedisPoolProvider(private val redisUrlProvider: RedisUrlProvider) {
     private var jedisPool: JedisPool
+    private var redisUrl: URI
+    private val poolConfig = JedisPoolConfig().apply {
+        maxTotal = 10
+        maxIdle = 5
+        minIdle = 1
+        testOnBorrow = true
+        testOnReturn = true
+        testWhileIdle = true
+    }
 
     init {
-        jedisPool = currentJedisPool()
+        redisUrl = fetchRedisUrl()
+        jedisPool = buildJedisPool(redisUrl)
     }
 
     companion object {
@@ -28,37 +37,31 @@ class JedisPoolProvider(private val redisUrlProvider: RedisUrlProvider) {
 
     fun <T> useResource(block: Jedis.() -> T): T = jedisPool.resource.use(block)
 
-    fun updateEvery(interval: Duration) {
-        fixedRateTimer(
-            name = "JedisPool refresh",
-            initialDelay = interval.toLongMilliseconds(),
-            period = interval.toLongMilliseconds(),
-        ) {
-            logger.info("updatingJedisInformation")
-            jedisPool = currentJedisPool()
-        }
-    }
+    fun updateEvery(interval: Duration): Timer = fixedRateTimer(
+        name = "Update Jedis pool",
+        initialDelay = interval.toLongMilliseconds(),
+        period = interval.toLongMilliseconds(),
+        action = { updateJedisPool() },
+    )
 
-    private fun currentJedisPool(): JedisPool {
-        val redisUrl = when (val redisUrlResult = redisUrlProvider.fetchUrl()) {
+    private fun updateJedisPool(): Unit =
+        when (val newRedisUrl = fetchRedisUrl()) {
+            redisUrl -> logger.debug("Redis URL is up-to-date")
+            else -> {
+                logger.info("Updating Redis URL to $redisUrl")
+                redisUrl = newRedisUrl
+                jedisPool = buildJedisPool(redisUrl)
+            }
+        }
+
+    private fun fetchRedisUrl(): URI =
+        when (val redisUrlResult = redisUrlProvider.fetchUrl()) {
             is Success -> redisUrlResult.value
             is Failure -> throw UnableToCreateJedisPoolException(redisUrlResult.reason)
         }
 
-        return buildJedisPool(redisUrl)
-    }
-
-    private fun buildJedisPool(redisUrl: URI): JedisPool {
-        val poolConfig = JedisPoolConfig().apply {
-            maxTotal = 10
-            maxIdle = 5
-            minIdle = 1
-            testOnBorrow = true
-            testOnReturn = true
-            testWhileIdle = true
-        }
-
-        return try {
+    private fun buildJedisPool(redisUrl: URI): JedisPool =
+        try {
             JedisPool(
                 poolConfig,
                 redisUrl.host,
@@ -70,10 +73,8 @@ class JedisPoolProvider(private val redisUrlProvider: RedisUrlProvider) {
             }
         } catch (e: JedisConnectionException) {
             logger.error(e.message)
-
             throw UnableToConnectToRedisException("Could not connect to Redis at $redisUrl")
         }
-    }
 }
 
 class UnableToCreateJedisPoolException(message: String) : java.lang.RuntimeException(message)
