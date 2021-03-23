@@ -46,7 +46,7 @@ class JedisPoolProvider(private val redisUrlProvider: RedisUrlProvider) {
 
     private fun updateJedisPool(): Unit =
         when (val newRedisUrl = fetchRedisUrl()) {
-            redisUrl -> logger.debug("Redis URL is up-to-date")
+            redisUrl -> logger.info("Redis URL is up-to-date")
             else -> {
                 logger.info("Updating Redis URL to $redisUrl")
                 redisUrl = newRedisUrl
