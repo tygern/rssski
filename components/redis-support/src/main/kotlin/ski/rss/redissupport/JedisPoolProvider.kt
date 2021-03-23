@@ -61,21 +61,20 @@ class JedisPoolProvider(private val redisUrlProvider: RedisUrlProvider) {
         }
 
     private fun buildJedisPool(redisUrl: URI): JedisPool =
-        try {
-            JedisPool(
-                poolConfig,
-                redisUrl.host,
-                redisUrl.port,
-                Protocol.DEFAULT_TIMEOUT,
-                redisUrl.userInfo?.split(":")?.get(1)
-            ).apply {
+        JedisPool(
+            poolConfig,
+            redisUrl.host,
+            redisUrl.port,
+            Protocol.DEFAULT_TIMEOUT,
+            redisUrl.userInfo?.split(":")?.get(1)
+        ).apply {
+            try {
                 resource.use { it.ping() }
+            } catch (e: JedisConnectionException) {
+                logger.error("Could not connect to Redis at {}", redisUrl)
+                logger.error(e.message)
             }
-        } catch (e: JedisConnectionException) {
-            logger.error(e.message)
-            throw UnableToConnectToRedisException("Could not connect to Redis at $redisUrl")
         }
 }
 
 class UnableToCreateJedisPoolException(message: String) : java.lang.RuntimeException(message)
-class UnableToConnectToRedisException(message: String) : java.lang.RuntimeException(message)
