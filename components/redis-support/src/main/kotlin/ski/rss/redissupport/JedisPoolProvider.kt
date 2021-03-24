@@ -15,6 +15,7 @@ import kotlin.concurrent.fixedRateTimer
 import kotlin.time.Duration
 
 class JedisPoolProvider(private val redisUrlProvider: RedisUrlProvider) {
+    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
     private var jedisPool: JedisPool
     private var redisUrl: URI
     private val poolConfig = JedisPoolConfig().apply {
@@ -29,10 +30,6 @@ class JedisPoolProvider(private val redisUrlProvider: RedisUrlProvider) {
     init {
         redisUrl = fetchRedisUrl()
         jedisPool = buildJedisPool(redisUrl)
-    }
-
-    companion object {
-        private val logger: Logger = LoggerFactory.getLogger(this::class.java)
     }
 
     fun <T> useResource(block: Jedis.() -> T): T = jedisPool.resource.use(block)
